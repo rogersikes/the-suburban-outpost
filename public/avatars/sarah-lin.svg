@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="sarah-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#064e3b" />
+      <stop offset="50%" stop-color="#065f46" />
+      <stop offset="100%" stop-color="#022c22" />
+    </linearGradient>
+    <linearGradient id="emerald-rim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10b981" />
+      <stop offset="100%" stop-color="#047857" />
+    </linearGradient>
+    <linearGradient id="sarah-coat" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#134e4a" />
+      <stop offset="100%" stop-color="#042f2e" />
+    </linearGradient>
+    <linearGradient id="sarah-hair" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1f2937" />
+      <stop offset="100%" stop-color="#111827" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Ring Badge -->
+  <circle cx="120" cy="120" r="118" fill="url(#sarah-bg)" stroke="url(#emerald-rim)" stroke-width="4" />
+
+  <!-- Inner Clip Path -->
+  <clipPath id="sarah-clip">
+    <circle cx="120" cy="120" r="114" />
+  </clipPath>
+
+  <g clip-path="url(#sarah-clip)">
+    <!-- Cellular / Botanical Micro-Ecology Pattern Background -->
+    <circle cx="60" cy="70" r="25" fill="none" stroke="#059669" stroke-width="1" opacity="0.3" stroke-dasharray="2 3" />
+    <circle cx="180" cy="70" r="20" fill="none" stroke="#059669" stroke-width="1" opacity="0.3" stroke-dasharray="2 3" />
+    <path d="M 40 130 Q 120 110 200 130" fill="none" stroke="#10b981" stroke-width="1" opacity="0.25" />
+
+    <!-- Shoulders & Dark Teal Eco-Field Jacket -->
+    <path d="M 35 240 Q 60 176 120 176 Q 180 176 205 240 Z" fill="url(#sarah-coat)" />
+    <!-- Collar -->
+    <path d="M 88 178 L 120 216 L 152 178 L 138 162 L 120 175 L 102 162 Z" fill="#042f2e" />
+    <!-- Soft Sage Inner Layer -->
+    <path d="M 108 178 L 120 216 L 132 178 Z" fill="#34d399" />
+
+    <!-- Botanical Sprout Lapel Pin -->
+    <circle cx="82" cy="204" r="8" fill="#059669" stroke="#a7f3d0" stroke-width="1.5" />
+    <path d="M 82 208 C 82 201 87 197 87 197 C 87 197 87 203 82 208 Z" fill="#d1fae5" />
+    <path d="M 82 208 C 82 203 77 199 77 199 C 77 199 77 205 82 208 Z" fill="#6ee7b7" />
+
+    <!-- Sleek Dark Bob Hair Back -->
+    <path d="M 74 115 C 72 155 76 182 86 195 C 80 160 84 130 90 115 Z" fill="url(#sarah-hair)" />
+    <path d="M 166 115 C 168 155 164 182 154 195 C 160 160 156 130 150 115 Z" fill="url(#sarah-hair)" />
+
+    <!-- Neck -->
+    <path d="M 105 142 L 105 178 Q 120 186 135 178 L 135 142 Z" fill="#fde68a" />
+
+    <!-- Head & Face -->
+    <ellipse cx="120" cy="120" rx="36" ry="40" fill="#fef3c7" />
+
+    <!-- Hair Front & Polished Side Bangs -->
+    <path d="M 78 112 C 78 70 162 70 162 112 C 150 86 132 80 118 80 C 100 80 86 88 78 112 Z" fill="url(#sarah-hair)" />
+    <path d="M 78 108 C 84 135 88 150 90 155 C 86 142 82 126 80 108 Z" fill="url(#sarah-hair)" />
+    <path d="M 162 108 C 156 135 152 150 150 155 C 154 142 158 126 160 108 Z" fill="url(#sarah-hair)" />
+
+    <!-- Eyes (Keen, intelligent) -->
+    <ellipse cx="106" cy="116" rx="4.5" ry="3.8" fill="#111827" />
+    <ellipse cx="134" cy="116" rx="4.5" ry="3.8" fill="#111827" />
+    <circle cx="107.5" cy="114.5" r="1.5" fill="#ffffff" />
+    <circle cx="135.5" cy="114.5" r="1.5" fill="#ffffff" />
+
+    <!-- Minimalist Titanium Wireframe Glasses -->
+    <circle cx="106" cy="116" r="11" fill="none" stroke="#047857" stroke-width="2" />
+    <circle cx="134" cy="116" r="11" fill="none" stroke="#047857" stroke-width="2" />
+    <line x1="117" y1="116" x2="123" y2="116" stroke="#047857" stroke-width="2" />
+    <line x1="88" y1="114" x2="95" y2="114" stroke="#047857" stroke-width="2" />
+    <line x1="145" y1="114" x2="152" y2="114" stroke="#047857" stroke-width="2" />
+
+    <!-- Eyebrows -->
+    <path d="M 97 101 Q 106 98 115 101" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" />
+    <path d="M 125 101 Q 134 98 143 101" fill="none" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" />
+
+    <!-- Nose -->
+    <path d="M 119 117 L 117 126 L 123 126" fill="none" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Warm, perceptive smile -->
+    <path d="M 112 141 Q 120 147 128 141" fill="none" stroke="#064e3b" stroke-width="2.2" stroke-linecap="round" />
+  </g>
+</svg>

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="caleb-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1917" />
+      <stop offset="50%" stop-color="#292524" />
+      <stop offset="100%" stop-color="#431407" />
+    </linearGradient>
+    <linearGradient id="flame-rim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316" />
+      <stop offset="100%" stop-color="#c2410c" />
+    </linearGradient>
+    <linearGradient id="caleb-jacket" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3f2e24" />
+      <stop offset="100%" stop-color="#241a14" />
+    </linearGradient>
+    <linearGradient id="beard-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#9a3412" />
+      <stop offset="100%" stop-color="#7c2d12" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Ring Badge -->
+  <circle cx="120" cy="120" r="118" fill="url(#caleb-bg)" stroke="url(#flame-rim)" stroke-width="4" />
+
+  <!-- Inner Clip Path -->
+  <clipPath id="caleb-clip">
+    <circle cx="120" cy="120" r="114" />
+  </clipPath>
+
+  <g clip-path="url(#caleb-clip)">
+    <!-- Thermal Flue Draft Lines Background -->
+    <path d="M 60 160 Q 70 100 80 40" fill="none" stroke="#ea580c" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.3" />
+    <path d="M 120 160 Q 120 100 120 40" fill="none" stroke="#f97316" stroke-width="1.2" stroke-dasharray="4 4" opacity="0.3" />
+    <path d="M 180 160 Q 170 100 160 40" fill="none" stroke="#ea580c" stroke-width="1.2" stroke-dasharray="3 3" opacity="0.3" />
+
+    <!-- Shoulders & Heavy Rugged Canvas Field Coat -->
+    <path d="M 35 240 Q 60 175 120 175 Q 180 175 205 240 Z" fill="url(#caleb-jacket)" />
+    <!-- Thermal Flannel Plaid Collar Accent -->
+    <path d="M 85 178 L 120 220 L 155 178 L 140 164 L 120 178 L 100 164 Z" fill="#7f1d1d" />
+    <path d="M 106 180 L 120 220 L 134 180 Z" fill="#c2410c" />
+
+    <!-- Hearth Inspector Flame Lapel Pin -->
+    <circle cx="78" cy="205" r="8" fill="#ea580c" stroke="#fdba74" stroke-width="1.5" />
+    <path d="M 78 197 C 82 201 84 204 84 207 A 6 6 0 0 1 72 207 C 72 204 75 202 78 197 Z" fill="#ffedd5" />
+    <path d="M 78 202 C 80 205 81 207 81 208 A 3 3 0 0 1 75 208 C 75 206 77 205 78 202 Z" fill="#ea580c" />
+
+    <!-- Neck -->
+    <path d="M 102 144 L 102 178 Q 120 188 138 178 L 138 144 Z" fill="#fed7aa" />
+
+    <!-- Head & Strong Rugged Profile -->
+    <ellipse cx="120" cy="122" rx="38" ry="42" fill="#fde68a" />
+
+    <!-- Full Warm Auburn/Copper Hearthmaster Beard -->
+    <path d="M 84 122 Q 88 172 120 172 Q 152 172 156 122 C 148 136 136 148 120 148 C 104 148 92 136 84 122 Z" fill="url(#beard-grad)" />
+    <path d="M 106 138 Q 120 144 134 138 Q 120 146 106 138 Z" fill="#7c2d12" />
+
+    <!-- Eyes (Attentive, focused) -->
+    <circle cx="106" cy="116" r="4.5" fill="#1c1917" />
+    <circle cx="134" cy="116" r="4.5" fill="#1c1917" />
+    <circle cx="107.5" cy="114.5" r="1.5" fill="#ffffff" />
+    <circle cx="135.5" cy="114.5" r="1.5" fill="#ffffff" />
+
+    <!-- Eyebrows -->
+    <path d="M 96 102 Q 106 99 116 103" fill="none" stroke="#7c2d12" stroke-width="3" stroke-linecap="round" />
+    <path d="M 124 103 Q 134 99 144 102" fill="none" stroke="#7c2d12" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Nose -->
+    <path d="M 119 117 L 116 127 L 124 127" fill="none" stroke="#c2410c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Friendly Smile Line -->
+    <path d="M 112 142 Q 120 147 128 142" fill="none" stroke="#431407" stroke-width="2.2" stroke-linecap="round" />
+
+    <!-- Wavy Auburn Hair / Side Part -->
+    <path d="M 80 110 C 80 66 160 66 160 110 C 152 86 136 78 120 78 C 104 78 88 86 80 110 Z" fill="url(#beard-grad)" />
+    <path d="M 88 84 Q 105 76 124 80 Q 142 78 152 86" fill="none" stroke="#ea580c" stroke-width="2" opacity="0.6" />
+  </g>
+</svg>

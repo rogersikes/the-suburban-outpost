@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bg-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1c1917" />
+      <stop offset="50%" stop-color="#292524" />
+      <stop offset="100%" stop-color="#0c0a09" />
+    </linearGradient>
+    <linearGradient id="amber-rim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f59e0b" />
+      <stop offset="100%" stop-color="#b45309" />
+    </linearGradient>
+    <linearGradient id="jacket-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2d3725" />
+      <stop offset="100%" stop-color="#1a2315" />
+    </linearGradient>
+    <linearGradient id="cap-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#78350f" />
+      <stop offset="100%" stop-color="#451a03" />
+    </linearGradient>
+    <linearGradient id="skin-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#fed7aa" />
+      <stop offset="100%" stop-color="#fbcfe8" />
+    </linearGradient>
+    <filter id="soft-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Ring Badge -->
+  <circle cx="120" cy="120" r="118" fill="url(#bg-grad)" stroke="url(#amber-rim)" stroke-width="4" />
+
+  <!-- Inner Clip Path for Character -->
+  <clipPath id="avatar-clip">
+    <circle cx="120" cy="120" r="114" />
+  </clipPath>
+
+  <g clip-path="url(#avatar-clip)">
+    <!-- Subtle Compass Grid Background -->
+    <circle cx="120" cy="120" r="85" fill="none" stroke="#44403c" stroke-width="1" stroke-dasharray="3 3" opacity="0.4" />
+    <line x1="120" y1="10" x2="120" y2="230" stroke="#44403c" stroke-width="1" opacity="0.3" />
+    <line x1="10" y1="120" x2="230" y2="120" stroke="#44403c" stroke-width="1" opacity="0.3" />
+
+    <!-- Shoulders & Rugged Canvas Field Jacket -->
+    <path d="M 35 240 Q 60 175 120 175 Q 180 175 205 240 Z" fill="url(#jacket-grad)" />
+    <!-- Jacket Collar & Inner Layer -->
+    <path d="M 85 178 L 120 220 L 155 178 L 140 165 L 120 180 L 100 165 Z" fill="#44403c" />
+    <path d="M 105 180 L 120 220 L 135 180 Z" fill="#d97706" />
+
+    <!-- Compass Lapel Pin -->
+    <circle cx="78" cy="205" r="8" fill="#d97706" stroke="#fbbf24" stroke-width="1.5" />
+    <polygon points="78,199 80.5,205 78,211 75.5,205" fill="#fef3c7" />
+    <polygon points="72,205 78,202.5 84,205 78,207.5" fill="#92400e" />
+
+    <!-- Neck -->
+    <path d="M 102 145 L 102 180 Q 120 190 138 180 L 138 145 Z" fill="#fcd34d" />
+    <path d="M 102 145 Q 120 160 138 145 Z" fill="#f59e0b" opacity="0.3" />
+
+    <!-- Head & Face (Friendly Stylized Cartoon) -->
+    <ellipse cx="120" cy="122" rx="38" ry="42" fill="#fde68a" />
+
+    <!-- Ears -->
+    <ellipse cx="80" cy="125" rx="7" ry="11" fill="#fcd34d" />
+    <ellipse cx="160" cy="125" rx="7" ry="11" fill="#fcd34d" />
+
+    <!-- Beard / Stubble -->
+    <path d="M 88 120 Q 92 162 120 162 Q 148 162 152 120 C 146 132 136 142 120 142 C 104 142 94 132 88 120 Z" fill="#78350f" opacity="0.85" />
+
+    <!-- Eyes (Friendly, observant) -->
+    <circle cx="106" cy="116" r="4.5" fill="#1c1917" />
+    <circle cx="134" cy="116" r="4.5" fill="#1c1917" />
+    <circle cx="107.5" cy="114.5" r="1.5" fill="#ffffff" />
+    <circle cx="135.5" cy="114.5" r="1.5" fill="#ffffff" />
+
+    <!-- Glasses (Architect / Field Engineer style) -->
+    <rect x="94" y="106" width="24" height="20" rx="6" fill="none" stroke="#292524" stroke-width="2.5" />
+    <rect x="122" y="106" width="24" height="20" rx="6" fill="none" stroke="#292524" stroke-width="2.5" />
+    <line x1="118" y1="114" x2="122" y2="114" stroke="#292524" stroke-width="2.5" />
+    <line x1="88" y1="113" x2="94" y2="113" stroke="#292524" stroke-width="2.5" />
+    <line x1="146" y1="113" x2="152" y2="113" stroke="#292524" stroke-width="2.5" />
+
+    <!-- Eyebrows -->
+    <path d="M 96 102 Q 106 99 116 103" fill="none" stroke="#451a03" stroke-width="3" stroke-linecap="round" />
+    <path d="M 124 103 Q 134 99 144 102" fill="none" stroke="#451a03" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Nose -->
+    <path d="M 119 118 L 116 128 L 124 128" fill="none" stroke="#b45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Friendly Smile -->
+    <path d="M 110 144 Q 120 152 130 144" fill="none" stroke="#451a03" stroke-width="2.5" stroke-linecap="round" />
+
+    <!-- Rugged Field Cap / Hat -->
+    <!-- Cap Crown -->
+    <path d="M 80 102 C 80 65 160 65 160 102 Z" fill="url(#cap-grad)" />
+    <!-- Cap Visor / Bill (Curved, tilted) -->
+    <path d="M 72 100 Q 120 85 168 100 Q 120 108 72 100 Z" fill="#92400e" filter="url(#soft-shadow)" />
+    <!-- Cap Patch with Outpost Symbol -->
+    <rect x="110" y="74" width="20" height="14" rx="3" fill="#d97706" stroke="#fef3c7" stroke-width="1" />
+    <polygon points="120,76 123,81 120,86 117,81" fill="#1c1917" />
+  </g>
+</svg>

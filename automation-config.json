@@ -1,0 +1,8 @@
+{
+  "targetDailyGoal": 15,
+  "publishFrequency": "15 articles / day (Continuous Auto-Pilot)",
+  "pacingMode": "paced",
+  "autopilotEnabled": true,
+  "amazonTag": "thesuburbanoutpost-20",
+  "timezone": "America/Los_Angeles"
+}

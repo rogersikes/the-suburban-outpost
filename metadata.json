@@ -1,0 +1,8 @@
+{
+  "name": "The Suburban Outpost - Off-Grid Living & Content Engine",
+  "description": "Autonomous off-grid living publication and content marketing engine powered by DataForSEO, Google Search Console, GA4 insights, affiliate monetization, and Gemini AI.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

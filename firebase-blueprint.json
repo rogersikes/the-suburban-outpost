@@ -1,0 +1,79 @@
+{
+  "entities": {
+    "article": {
+      "title": "Article",
+      "description": "A published editorial guide or review on The Suburban Outpost.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique identifier for the article" },
+        "slug": { "type": "string", "description": "URL-friendly slug" },
+        "title": { "type": "string", "description": "Headline of the article" },
+        "subtitle": { "type": "string", "description": "Subheadline / Deck text" },
+        "category": { "type": "string", "description": "Category name" },
+        "publishedAt": { "type": "string", "description": "Publication date string" },
+        "readingTime": { "type": "string", "description": "Estimated reading duration" },
+        "primaryKeyword": { "type": "string", "description": "Target primary SEO keyword" },
+        "searchIntent": { "type": "string", "description": "Search intent category" },
+        "featuredImage": { "type": "string", "description": "High-resolution hero image URL" },
+        "imageCaption": { "type": "string", "description": "Technical field caption for the image" },
+        "metaDescription": { "type": "string", "description": "Meta description for SEO" },
+        "summary": { "type": "string", "description": "Executive summary and core verdict" },
+        "contentMarkdown": { "type": "string", "description": "Full article body in markdown" }
+      },
+      "required": ["id", "slug", "title", "category", "primaryKeyword", "contentMarkdown"]
+    },
+    "redirect": {
+      "title": "Redirect",
+      "description": "A 301 permanent redirect rule mapping for consolidated or duplicate articles.",
+      "type": "object",
+      "properties": {
+        "sourceSlug": { "type": "string", "description": "Source article URL slug to redirect from" },
+        "targetSlug": { "type": "string", "description": "Destination canonical article URL slug" },
+        "code": { "type": "number", "description": "HTTP redirect status code (301)" },
+        "reason": { "type": "string", "description": "Reason for consolidation or redirection" },
+        "createdAt": { "type": "string", "description": "ISO timestamp when the rule was created" }
+      },
+      "required": ["sourceSlug", "targetSlug"]
+    },
+    "subscriber": {
+      "title": "Subscriber",
+      "description": "A verified subscriber to The Outpost Dispatch newsletter.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique subscriber ID or sanitized email" },
+        "email": { "type": "string", "format": "email", "description": "Subscriber's email address" },
+        "createdAt": { "type": "string", "description": "ISO timestamp when subscribed" },
+        "source": { "type": "string", "description": "Component or page where user subscribed" },
+        "status": { "type": "string", "enum": ["active", "unsubscribed"], "description": "Subscription status" },
+        "downloadedBlueprint": { "type": "boolean", "description": "Whether the welcome solar sizing blueprint was accessed" }
+      },
+      "required": ["email", "createdAt", "status"]
+    },
+    "systemProbe": {
+      "title": "System Probe",
+      "description": "Connectivity test document for health checks.",
+      "type": "object",
+      "properties": {
+        "status": { "type": "string", "description": "System status" }
+      }
+    }
+  },
+  "firestore": {
+    "/articles/{articleId}": {
+      "schema": "article",
+      "description": "Collection of published articles and technical field guides."
+    },
+    "/redirects/{redirectId}": {
+      "schema": "redirect",
+      "description": "Collection of 301 permanent redirect rules for merged or retired articles."
+    },
+    "/subscribers/{subscriberId}": {
+      "schema": "subscriber",
+      "description": "Collection of email subscribers to The Outpost Dispatch."
+    },
+    "/system/{docId}": {
+      "schema": "systemProbe",
+      "description": "System probe and connectivity verification documents."
+    }
+  }
+}

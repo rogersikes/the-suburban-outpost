@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" href="/favicon.svg" />
+    <meta name="theme-color" content="#0c0a09" />
+    
+    <!-- Title & SEO Metadata -->
+    <title>The Suburban Outpost - Off-Grid Living & Content Engine</title>
+    <meta name="description" content="Engineering residential self-reliance: quiet solar power storage, stealth rainwater catchment, clean-burn wood heat, and practical off-grid solutions for suburban and urban fringe homes." />
+    <link rel="canonical" href="https://thesuburbanoutpost.com/" />
+
+    <!-- Google Search Console (GSC) Verification Tag -->
+    <meta name="google-site-verification" content="" id="gsc-meta-tag" />
+
+    <!-- OpenGraph & Social Cards -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="The Suburban Outpost" />
+    <meta property="og:title" content="The Suburban Outpost - Off-Grid Living & Content Engine" />
+    <meta property="og:description" content="Engineering residential self-reliance: quiet solar power storage, stealth rainwater catchment, clean-burn wood heat, and practical off-grid solutions for suburban and urban fringe homes." />
+    <meta property="og:url" content="https://thesuburbanoutpost.com/" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="The Suburban Outpost - Off-Grid Living & Content Engine" />
+    <meta name="twitter:description" content="Engineering residential self-reliance: quiet solar power storage, stealth rainwater catchment, clean-burn wood heat, and practical off-grid solutions for suburban and urban fringe homes." />
+
+    <!-- Google Tag Manager / GA4 DataLayer Initialization -->
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      // Read runtime tracking configuration from localStorage or server pre-init
+      (function() {
+        try {
+          var raw = localStorage.getItem('outpost_analytics_config');
+          if (raw) {
+            var cfg = JSON.parse(raw);
+            if (cfg.gscVerificationCode) {
+              var meta = document.getElementById('gsc-meta-tag');
+              if (meta) meta.setAttribute('content', cfg.gscVerificationCode);
+            }
+            if (cfg.ga4MeasurementId) {
+              var gaScript = document.createElement('script');
+              gaScript.id = 'ga4-script';
+              gaScript.async = true;
+              gaScript.src = 'https://www.googletagmanager.com/gtag/js?id=' + encodeURIComponent(cfg.ga4MeasurementId);
+              document.head.appendChild(gaScript);
+              gtag('config', cfg.ga4MeasurementId, { send_page_view: true });
+            }
+            if (cfg.gtmContainerId) {
+              (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+              new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+              j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+              'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+              })(window,document,'script','dataLayer',cfg.gtmContainerId);
+            }
+          }
+        } catch(e) { console.warn('Analytics pre-loader error', e); }
+      })();
+    </script>
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300..800;1,9..144,300..700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-stone-900 text-stone-100 antialiased selection:bg-amber-600 selection:text-white">
+    <!-- Google Tag Manager (noscript fallback container) -->
+    <noscript id="gtm-noscript-container">
+      <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-DEFAULT" height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

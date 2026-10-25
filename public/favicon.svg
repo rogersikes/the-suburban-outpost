@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Rounded Outpost Badge Background -->
+  <rect width="64" height="64" rx="16" fill="#0c0a09"/>
+  <rect x="2" y="2" width="60" height="60" rx="14" stroke="#78350f" stroke-width="1.5" stroke-opacity="0.6"/>
+  
+  <!-- Outer Solar Ring -->
+  <circle cx="32" cy="32" r="22" stroke="#d97706" stroke-width="1.5" stroke-dasharray="2 3" stroke-opacity="0.8"/>
+  
+  <!-- Compass Star / Off-Grid Solar Points -->
+  <!-- North (Main Gold Pointer) -->
+  <polygon points="32,8 36,28 32,24" fill="#fbbf24"/>
+  <polygon points="32,8 28,28 32,24" fill="#d97706"/>
+  
+  <!-- South Pointer -->
+  <polygon points="32,56 36,36 32,40" fill="#b45309"/>
+  <polygon points="32,56 28,36 32,40" fill="#78350f"/>
+  
+  <!-- East Pointer -->
+  <polygon points="56,32 36,36 40,32" fill="#d97706"/>
+  <polygon points="56,32 36,28 40,32" fill="#f59e0b"/>
+  
+  <!-- West Pointer -->
+  <polygon points="8,32 28,36 24,32" fill="#78350f"/>
+  <polygon points="8,32 28,28 24,32" fill="#b45309"/>
+  
+  <!-- Central Outpost Core Ring & Dot -->
+  <circle cx="32" cy="32" r="6" fill="#1c1917" stroke="#f59e0b" stroke-width="2"/>
+  <circle cx="32" cy="32" r="2.5" fill="#fef3c7"/>
+</svg>

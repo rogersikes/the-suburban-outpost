@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="marcus-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#18181b" />
+      <stop offset="50%" stop-color="#27272a" />
+      <stop offset="100%" stop-color="#09090b" />
+    </linearGradient>
+    <linearGradient id="electric-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#eab308" />
+      <stop offset="100%" stop-color="#ca8a04" />
+    </linearGradient>
+    <linearGradient id="marcus-shirt" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <filter id="soft-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Ring Badge -->
+  <circle cx="120" cy="120" r="118" fill="url(#marcus-bg)" stroke="url(#electric-gold)" stroke-width="4" />
+
+  <!-- Inner Clip Path -->
+  <clipPath id="marcus-clip">
+    <circle cx="120" cy="120" r="114" />
+  </clipPath>
+
+  <g clip-path="url(#marcus-clip)">
+    <!-- Circuit Schematic Background Pattern -->
+    <path d="M 20 80 H 70 L 90 60 H 150 L 170 80 H 220" fill="none" stroke="#3f3f46" stroke-width="1.5" opacity="0.3" />
+    <circle cx="70" cy="80" r="3" fill="#eab308" opacity="0.5" />
+    <circle cx="170" cy="80" r="3" fill="#eab308" opacity="0.5" />
+    <path d="M 40 140 H 80 V 170 H 160 V 140 H 200" fill="none" stroke="#3f3f46" stroke-width="1.5" opacity="0.25" />
+
+    <!-- Shoulders & Heavy-Duty Electrician Work Shirt -->
+    <path d="M 35 240 Q 60 174 120 174 Q 180 174 205 240 Z" fill="url(#marcus-shirt)" />
+    <!-- Stitched Collar -->
+    <path d="M 85 176 L 120 216 L 155 176 L 140 162 L 120 176 L 100 162 Z" fill="#334155" />
+    <!-- Hi-Vis Work Henley Inner Layer -->
+    <path d="M 106 178 L 120 216 L 134 178 Z" fill="#eab308" />
+
+    <!-- High-Voltage / Solar Inverter Lapel Pin -->
+    <circle cx="78" cy="205" r="8" fill="#ca8a04" stroke="#fef08a" stroke-width="1.5" />
+    <polygon points="79,198 75,205 78,205 77,212 82,204 79,204" fill="#fef08a" />
+
+    <!-- Neck -->
+    <path d="M 102 144 L 102 178 Q 120 188 138 178 L 138 144 Z" fill="#d97706" />
+    <path d="M 102 144 Q 120 156 138 144 Z" fill="#b45309" opacity="0.4" />
+
+    <!-- Head & Strong Jawline -->
+    <ellipse cx="120" cy="122" rx="38" ry="42" fill="#f59e0b" />
+
+    <!-- Neat Trimmed Goatee / Stubble -->
+    <path d="M 98 136 C 98 160 142 160 142 136 C 136 150 120 154 104 150 Z" fill="#27272a" opacity="0.9" />
+
+    <!-- Eyes (Sharp, technical) -->
+    <circle cx="106" cy="116" r="4.5" fill="#18181b" />
+    <circle cx="134" cy="116" r="4.5" fill="#18181b" />
+    <circle cx="107.5" cy="114.5" r="1.5" fill="#ffffff" />
+    <circle cx="135.5" cy="114.5" r="1.5" fill="#ffffff" />
+
+    <!-- Professional Protective Eyewear (Subtle Amber Tint) -->
+    <rect x="94" y="106" width="24" height="20" rx="6" fill="#fef08a" fill-opacity="0.1" stroke="#52525b" stroke-width="2.2" />
+    <rect x="122" y="106" width="24" height="20" rx="6" fill="#fef08a" fill-opacity="0.1" stroke="#52525b" stroke-width="2.2" />
+    <line x1="118" y1="114" x2="122" y2="114" stroke="#52525b" stroke-width="2.2" />
+    <line x1="88" y1="113" x2="94" y2="113" stroke="#52525b" stroke-width="2.2" />
+    <line x1="146" y1="113" x2="152" y2="113" stroke="#52525b" stroke-width="2.2" />
+
+    <!-- Eyebrows -->
+    <path d="M 96 102 Q 106 98 116 102" fill="none" stroke="#27272a" stroke-width="3" stroke-linecap="round" />
+    <path d="M 124 102 Q 134 98 144 102" fill="none" stroke="#27272a" stroke-width="3" stroke-linecap="round" />
+
+    <!-- Nose -->
+    <path d="M 119 117 L 116 128 L 124 128" fill="none" stroke="#92400e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Smile / Composed Confidence -->
+    <path d="M 111 143 Q 120 150 129 143" fill="none" stroke="#27272a" stroke-width="2.5" stroke-linecap="round" />
+
+    <!-- Short Textured Hair (Slight Temple Grey) -->
+    <path d="M 82 108 C 80 68 160 68 158 108 C 152 86 138 80 120 80 C 102 80 88 86 82 108 Z" fill="#27272a" />
+    <!-- Hair Texture / Highlights -->
+    <path d="M 92 84 Q 105 76 120 78 Q 135 76 148 84" fill="none" stroke="#71717a" stroke-width="2" opacity="0.6" />
+  </g>
+</svg>

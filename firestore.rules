@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Articles collection: Publicly readable for editorial readers, write access for outpost engine
+    match /articles/{articleId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Redirects collection: Publicly readable for URL routing and 301 redirects, write access for outpost engine
+    match /redirects/{redirectId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Subscribers collection: Public write (signup), read/write access for newsletter engine
+    match /subscribers/{subscriberId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // System probe and connectivity checks
+    match /system/{docId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}

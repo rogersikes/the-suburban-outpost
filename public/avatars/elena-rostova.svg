@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="elena-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#082f49" />
+    </linearGradient>
+    <linearGradient id="cyan-rim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" />
+      <stop offset="100%" stop-color="#0e7490" />
+    </linearGradient>
+    <linearGradient id="elena-vest" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#155e75" />
+      <stop offset="100%" stop-color="#0e3a47" />
+    </linearGradient>
+    <linearGradient id="hair-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b271d" />
+      <stop offset="100%" stop-color="#1c100b" />
+    </linearGradient>
+    <filter id="soft-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Ring Badge -->
+  <circle cx="120" cy="120" r="118" fill="url(#elena-bg)" stroke="url(#cyan-rim)" stroke-width="4" />
+
+  <!-- Inner Clip Path -->
+  <clipPath id="elena-clip">
+    <circle cx="120" cy="120" r="114" />
+  </clipPath>
+
+  <g clip-path="url(#elena-clip)">
+    <!-- Water Elevation Contours Background -->
+    <ellipse cx="120" cy="120" rx="90" ry="70" fill="none" stroke="#334155" stroke-width="1" stroke-dasharray="4 4" opacity="0.4" />
+    <path d="M 30 90 Q 120 70 210 90" fill="none" stroke="#0891b2" stroke-width="1" opacity="0.3" />
+    <path d="M 20 140 Q 120 160 220 140" fill="none" stroke="#0891b2" stroke-width="1" opacity="0.25" />
+
+    <!-- Shoulders & Technical Hydrology Shell Jacket -->
+    <path d="M 35 240 Q 60 176 120 176 Q 180 176 205 240 Z" fill="url(#elena-vest)" />
+    <!-- High Technical Collar & Inner Charcoal Zip -->
+    <path d="M 90 178 L 120 216 L 150 178 L 138 162 L 120 174 L 102 162 Z" fill="#1e293b" />
+    <path d="M 108 178 L 120 216 L 132 178 Z" fill="#06b6d4" />
+
+    <!-- Water Drop Lapel Pin (Hydrology Specialist) -->
+    <circle cx="82" cy="204" r="8" fill="#0891b2" stroke="#67e8f9" stroke-width="1.5" />
+    <path d="M 82 198 C 85 202 87 205 87 207 A 5 5 0 0 1 77 207 C 77 205 79 202 82 198 Z" fill="#cffafe" />
+
+    <!-- Hair Back (Ponytail base) -->
+    <path d="M 76 110 C 70 145 74 180 82 195 C 80 160 84 130 90 115 Z" fill="url(#hair-grad)" />
+    <path d="M 164 110 C 170 145 166 180 158 195 C 160 160 156 130 150 115 Z" fill="url(#hair-grad)" />
+
+    <!-- Neck -->
+    <path d="M 105 142 L 105 178 Q 120 186 135 178 L 135 142 Z" fill="#fed7aa" />
+    <path d="M 105 144 Q 120 156 135 144 Z" fill="#f97316" opacity="0.2" />
+
+    <!-- Head & Face -->
+    <ellipse cx="120" cy="120" rx="36" ry="40" fill="#fde68a" />
+
+    <!-- Hair Front & Framing -->
+    <path d="M 80 110 C 80 72 160 72 160 110 C 150 90 135 84 120 84 C 105 84 90 90 80 110 Z" fill="url(#hair-grad)" />
+    <path d="M 82 104 C 84 125 86 142 88 150 C 86 138 84 122 84 106 Z" fill="url(#hair-grad)" />
+    <path d="M 158 104 C 156 125 154 142 152 150 C 154 138 156 122 156 106 Z" fill="url(#hair-grad)" />
+
+    <!-- Eyes (Focused, alert) -->
+    <ellipse cx="106" cy="116" rx="4.5" ry="4" fill="#1c1917" />
+    <ellipse cx="134" cy="116" rx="4.5" ry="4" fill="#1c1917" />
+    <circle cx="107.5" cy="114.5" r="1.5" fill="#ffffff" />
+    <circle cx="135.5" cy="114.5" r="1.5" fill="#ffffff" />
+
+    <!-- Modern Hydrologist Field Glasses -->
+    <rect x="94" y="106" width="24" height="20" rx="6" fill="none" stroke="#0e7490" stroke-width="2.2" />
+    <rect x="122" y="106" width="24" height="20" rx="6" fill="none" stroke="#0e7490" stroke-width="2.2" />
+    <line x1="118" y1="114" x2="122" y2="114" stroke="#0e7490" stroke-width="2.2" />
+    <line x1="88" y1="113" x2="94" y2="113" stroke="#0e7490" stroke-width="2.2" />
+    <line x1="146" y1="113" x2="152" y2="113" stroke="#0e7490" stroke-width="2.2" />
+
+    <!-- Eyebrows -->
+    <path d="M 97 103 Q 107 100 115 103" fill="none" stroke="#3b271d" stroke-width="2.5" stroke-linecap="round" />
+    <path d="M 125 103 Q 133 100 143 103" fill="none" stroke="#3b271d" stroke-width="2.5" stroke-linecap="round" />
+
+    <!-- Nose -->
+    <path d="M 119 118 L 117 127 L 123 127" fill="none" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Determined, friendly smile -->
+    <path d="M 112 142 Q 120 148 128 142" fill="none" stroke="#78350f" stroke-width="2.2" stroke-linecap="round" />
+  </g>
+</svg>

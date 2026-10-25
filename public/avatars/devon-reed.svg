@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="devon-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" />
+      <stop offset="50%" stop-color="#312e81" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="indigo-rim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#818cf8" />
+      <stop offset="100%" stop-color="#4f46e5" />
+    </linearGradient>
+    <linearGradient id="devon-suit" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="devon-hair" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#292524" />
+      <stop offset="100%" stop-color="#1c1917" />
+    </linearGradient>
+  </defs>
+
+  <!-- Outer Ring Badge -->
+  <circle cx="120" cy="120" r="118" fill="url(#devon-bg)" stroke="url(#indigo-rim)" stroke-width="4" />
+
+  <!-- Inner Clip Path -->
+  <clipPath id="devon-clip">
+    <circle cx="120" cy="120" r="114" />
+  </clipPath>
+
+  <g clip-path="url(#devon-clip)">
+    <!-- Municipal Zoning Grid / Parcel Map Background -->
+    <rect x="30" y="30" width="50" height="40" fill="none" stroke="#4338ca" stroke-width="1.2" opacity="0.4" />
+    <rect x="85" y="30" width="70" height="40" fill="none" stroke="#4338ca" stroke-width="1.2" opacity="0.4" />
+    <rect x="160" y="30" width="50" height="40" fill="none" stroke="#4338ca" stroke-width="1.2" opacity="0.4" />
+    <path d="M 20 120 L 220 120" fill="none" stroke="#6366f1" stroke-width="1" opacity="0.3" stroke-dasharray="4 4" />
+
+    <!-- Shoulders & Tailored Charcoal Urban Field Blazer -->
+    <path d="M 35 240 Q 60 174 120 174 Q 180 174 205 240 Z" fill="url(#devon-suit)" />
+    <!-- Lapels -->
+    <path d="M 85 176 L 120 226 L 155 176 L 138 160 L 120 176 L 102 160 Z" fill="#334155" />
+    <!-- Deep Indigo Oxford Shirt -->
+    <path d="M 106 178 L 120 226 L 134 178 Z" fill="#4f46e5" />
+
+    <!-- Architectural Scale / Legal Gavel Pin -->
+    <circle cx="78" cy="205" r="8" fill="#4338ca" stroke="#a5b4fc" stroke-width="1.5" />
+    <rect x="73" y="202" width="10" height="6" rx="1.5" fill="#e0e7ff" />
+    <line x1="78" y1="202" x2="78" y2="208" stroke="#312e81" stroke-width="1" />
+
+    <!-- Neck -->
+    <path d="M 104 144 L 104 178 Q 120 188 136 178 L 136 144 Z" fill="#fed7aa" />
+
+    <!-- Head & Sharp Jawline -->
+    <ellipse cx="120" cy="122" rx="37" ry="41" fill="#fde68a" />
+
+    <!-- Sharp Modern Matte-Black Glasses -->
+    <rect x="94" y="106" width="24" height="19" rx="4" fill="none" stroke="#1e1b4b" stroke-width="2.5" />
+    <rect x="122" y="106" width="24" height="19" rx="4" fill="none" stroke="#1e1b4b" stroke-width="2.5" />
+    <line x1="118" y1="113" x2="122" y2="113" stroke="#1e1b4b" stroke-width="2.5" />
+    <line x1="88" y1="112" x2="94" y2="112" stroke="#1e1b4b" stroke-width="2.5" />
+    <line x1="146" y1="112" x2="152" y2="112" stroke="#1e1b4b" stroke-width="2.5" />
+
+    <!-- Eyes (Direct, analytical) -->
+    <circle cx="106" cy="115" r="4.2" fill="#0f172a" />
+    <circle cx="134" cy="115" r="4.2" fill="#0f172a" />
+    <circle cx="107.5" cy="113.5" r="1.5" fill="#ffffff" />
+    <circle cx="135.5" cy="113.5" r="1.5" fill="#ffffff" />
+
+    <!-- Eyebrows -->
+    <path d="M 96 101 Q 106 97 115 101" fill="none" stroke="#1c1917" stroke-width="2.8" stroke-linecap="round" />
+    <path d="M 125 101 Q 134 97 144 101" fill="none" stroke="#1c1917" stroke-width="2.8" stroke-linecap="round" />
+
+    <!-- Nose -->
+    <path d="M 119 117 L 116 127 L 124 127" fill="none" stroke="#b45309" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+
+    <!-- Subtle, poised smile -->
+    <path d="M 112 142 Q 120 148 128 142" fill="none" stroke="#431407" stroke-width="2.2" stroke-linecap="round" />
+
+    <!-- Modern Styled Haircut -->
+    <path d="M 80 108 C 80 66 160 66 160 108 C 152 84 136 76 120 76 C 102 76 88 84 80 108 Z" fill="url(#devon-hair)" />
+    <path d="M 94 82 Q 108 74 126 77 Q 142 75 150 82" fill="none" stroke="#57534e" stroke-width="2" opacity="0.5" />
+  </g>
+</svg>
