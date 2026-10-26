@@ -11,7 +11,6 @@ import {
   Mail
 } from 'lucide-react';
 import { Article } from '../types';
-import { AdUnit } from './AdUnit';
 import { ReadinessCalculator } from './ReadinessCalculator';
 import { SmartImage } from './SmartImage';
 import { formatAmazonUrl, AMAZON_LINK_ATTRIBUTES } from '../amazon';
@@ -98,9 +97,6 @@ export const BlogHome: React.FC<BlogHomeProps> = ({
     <div className="min-h-screen bg-stone-950 text-stone-200">
       {/* Top Content Container */}
       <div className="max-w-7xl mx-auto px-3 sm:px-6 py-4 sm:py-8">
-        {/* Top Leaderboard Ad Slot */}
-        <AdUnit format="leaderboard" slotName="Frontpage Top Leaderboard" />
-
         {/* Featured Flagship Article (Hero Section) */}
         {heroArticle && (
           <a 
@@ -413,9 +409,6 @@ export const BlogHome: React.FC<BlogHomeProps> = ({
                 <span className="text-emerald-400 font-semibold">Autonomous Staff</span>
               </div>
             </div>
-
-            {/* Sidebar AdSense Responsive Slot */}
-            <AdUnit format="sidebar" />
 
             {/* Top Tested Equipment Widget with Amazon Affiliate Links */}
             <div className="p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-stone-900 border border-stone-800 shadow-xl">

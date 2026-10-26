@@ -20,7 +20,6 @@ import {
 import { Article } from '../types';
 import { AffiliateProductCard } from './AffiliateProductCard';
 import { TechnicalDiagram } from './TechnicalDiagram';
-import { AdUnit } from './AdUnit';
 import { SmartImage } from './SmartImage';
 import { getAuthorByName, getAuthorForCategory } from '../authors';
 import { NewsletterSignupCard } from './NewsletterSignupCard';
@@ -549,9 +548,6 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
           </div>
         </div>
 
-        {/* Top Responsive AdSense Unit */}
-        <AdUnit format="leaderboard" slotName="Article Header Leaderboard" />
-
         {/* Interactive Schematic Diagram */}
         <TechnicalDiagram type={diagramType} title={`TECHNICAL SCHEMATIC: ${article.title.split(':')[0]} Setup`} />
 
@@ -700,9 +696,6 @@ export const ArticleView: React.FC<ArticleViewProps> = ({
             </div>
           </div>
         )}
-
-        {/* Mid-Article Responsive AdSense Unit */}
-        <AdUnit format="in-article" slotName="Article Mid-Content Ad" />
 
         {/* Frequently Asked Questions Section (with Schema.org Accordion) */}
         {article.faq && article.faq.length > 0 && (
