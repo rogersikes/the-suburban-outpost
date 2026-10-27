@@ -35,7 +35,7 @@ export const BlogHome: React.FC<BlogHomeProps> = ({
   amazonTag
 }) => {
   const activeTag = amazonTag || 'thesuburbanoutpost-20';
-  const ARTICLES_PER_PAGE = 20;
+  const ARTICLES_PER_PAGE = 10;
   const [currentPage, setCurrentPage] = useState(1);
   const streamHeaderRef = useRef<HTMLDivElement>(null);
 
@@ -56,7 +56,7 @@ export const BlogHome: React.FC<BlogHomeProps> = ({
   }, [selectedCategory, searchQuery]);
 
   const heroArticle = filteredArticles[0] || articles[0];
-  // 20 articles per page (not counting the featured flagship article)
+  // 10 articles per page (not counting the featured flagship article)
   const availableGridArticles = filteredArticles.slice(1);
   const totalPages = Math.max(1, Math.ceil(availableGridArticles.length / ARTICLES_PER_PAGE));
   const validCurrentPage = Math.min(Math.max(1, currentPage), totalPages);
@@ -196,7 +196,7 @@ export const BlogHome: React.FC<BlogHomeProps> = ({
                 </h3>
                 {totalPages > 1 && (
                   <span className="text-[11px] font-mono text-amber-500/90 block mt-0.5">
-                    Page {validCurrentPage} of {totalPages} • 20 guides per page
+                    Page {validCurrentPage} of {totalPages} • {ARTICLES_PER_PAGE} guides per page
                   </span>
                 )}
               </div>
