@@ -438,7 +438,8 @@ export default function App() {
       updatePageMeta({
         title: "Outpost Autonomous Engine Console | The Suburban Outpost",
         description: "Admin content engine, SERP keyword tracker, and publishing dashboard.",
-        urlPath: '/admin'
+        urlPath: '/admin',
+        noindex: true
       });
     } else if (selectedArticle) {
       updatePageMeta({

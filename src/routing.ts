@@ -76,9 +76,23 @@ export function updatePageMeta(params: {
   urlPath: string;
   image?: string;
   type?: 'website' | 'article';
+  noindex?: boolean;
 }) {
   const fullUrl = `https://thesuburbanoutpost.com${params.urlPath}`;
   document.title = params.title;
+
+  // Robots indexing directive (noindex, nofollow for admin / backend views)
+  let robotsMeta = document.querySelector('meta[name="robots"]');
+  if (params.noindex) {
+    if (!robotsMeta) {
+      robotsMeta = document.createElement('meta');
+      robotsMeta.setAttribute('name', 'robots');
+      document.head.appendChild(robotsMeta);
+    }
+    robotsMeta.setAttribute('content', 'noindex, nofollow, noarchive');
+  } else if (robotsMeta) {
+    robotsMeta.setAttribute('content', 'index, follow');
+  }
 
   // Meta Description
   let metaDesc = document.querySelector('meta[name="description"]');

@@ -64,6 +64,16 @@ app.use((req, res, next) => {
   next();
 });
 
+// Search Engine Crawler Exclusion for Admin & Backend Endpoints
+// Injects X-Robots-Tag HTTP header on all administrative, backend, and API requests
+app.use((req, res, next) => {
+  const p = req.path.toLowerCase();
+  if (p.startsWith('/admin') || p.startsWith('/console') || p.startsWith('/api/')) {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive, nosnippet');
+  }
+  next();
+});
+
 // Initialize Gemini SDK with User-Agent header as required
 const apiKey = process.env.GEMINI_API_KEY || '';
 let ai: GoogleGenAI | null = null;
@@ -2654,7 +2664,11 @@ app.get('/robots.txt', (req, res) => {
   const robots = `User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /admin/
+Disallow: /console
+Disallow: /console/
 Disallow: /api/
+Disallow: /api/*
 
 Sitemap: ${baseUrl}/sitemap.xml
 `;
@@ -4683,10 +4697,11 @@ function renderHtmlWithMeta(rawTemplate: string, reqPath: string): string {
     const catName = catSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
     title = `${catName} Field Guides | The Suburban Outpost`;
     description = `Practical guides and residential blueprints for ${catName} in suburban lots and urban fringe homesteads.`;
-  } else if (cleanPath === '/admin') {
-    canonicalUrl = 'https://thesuburbanoutpost.com/admin';
-    title = 'Outpost Autonomous Engine Console | The Suburban Outpost';
-    robotsTag = '\n    <meta name="robots" content="noindex, nofollow" />';
+  } else if (cleanPath.startsWith('/admin') || cleanPath.startsWith('/console')) {
+    canonicalUrl = `https://thesuburbanoutpost.com${cleanPath}`;
+    title = 'Restricted Administration | The Suburban Outpost';
+    description = 'Restricted administrative terminal.';
+    robotsTag = '\n    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />';
   } else if (cleanPath === '/about' || cleanPath === '/editorial' || cleanPath === '/privacy' || cleanPath === '/affiliate') {
     canonicalUrl = `https://thesuburbanoutpost.com${cleanPath}`;
     const pageName = cleanPath.slice(1).charAt(0).toUpperCase() + cleanPath.slice(2);
