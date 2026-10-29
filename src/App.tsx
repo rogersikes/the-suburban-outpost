@@ -343,7 +343,7 @@ export default function App() {
             const rule = (data.redirects || []).find((r: any) => r.sourceSlug === slugToCheck);
             const effectiveSlug = rule ? rule.targetSlug : slugToCheck;
             if (rule && typeof window !== 'undefined') {
-              window.history.replaceState(null, '', `/article/${effectiveSlug}`);
+              window.history.replaceState(null, '', `/articles/${effectiveSlug}`);
             }
             const art = articles.find(a => a.slug === effectiveSlug);
             if (art) {

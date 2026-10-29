@@ -34,6 +34,36 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 app.use(express.json());
 
+// Canonical Host & Protocol 301 Redirection Middleware
+// Enforces single canonical domain (thesuburbanoutpost.com) and HTTPS across all live requests.
+app.use((req, res, next) => {
+  const host = (req.headers.host || '').toLowerCase();
+  const rawProto = (req.headers['x-forwarded-proto'] as string || req.protocol || 'https').toLowerCase();
+  // Cloud Run / Cloudflare might pass a comma-separated list in x-forwarded-proto, e.g. "https, http"
+  const proto = rawProto.split(',')[0].trim();
+
+  // Skip redirection for local development and preview environments
+  const isDevOrInternal = 
+    host.includes('localhost') || 
+    host.includes('127.0.0.1') || 
+    host.includes('.run.app') || 
+    host.includes('.aistudio-preview') ||
+    host.includes('.web.app') ||
+    host.includes('.firebaseapp.com');
+
+  if (!isDevOrInternal) {
+    const isWww = host.startsWith('www.');
+    const isHttp = proto === 'http';
+    if (isWww || isHttp) {
+      const canonicalHost = host.replace(/^www\./, '');
+      const targetUrl = `https://${canonicalHost}${req.originalUrl}`;
+      console.log(`[SEO 301 Redirect] Canonicalizing ${proto}://${host}${req.originalUrl} -> ${targetUrl}`);
+      return res.redirect(301, targetUrl);
+    }
+  }
+  next();
+});
+
 // Initialize Gemini SDK with User-Agent header as required
 const apiKey = process.env.GEMINI_API_KEY || '';
 let ai: GoogleGenAI | null = null;
@@ -3730,13 +3760,25 @@ app.get('/api/monetization/compliance-audit', (req, res) => {
   });
 });
 
-// 301 Redirect Interceptor for direct HTML/browser requests
-app.get(['/article/:slug', '/articles/:slug'], (req, res, next) => {
+// 301 Redirect Interceptors for direct HTML/browser requests
+// Singular /article/:slug redirects permanently (301) to canonical plural /articles/:slug
+app.get('/article/:slug', (req, res) => {
   const slug = req.params.slug;
   if (REDIRECTS_STORE[slug]) {
     const target = REDIRECTS_STORE[slug].targetSlug;
-    console.log(`[301 Permanent Redirect] /article/${slug} -> /article/${target}`);
-    return res.redirect(301, `/article/${target}`);
+    console.log(`[301 Permanent Redirect] /article/${slug} -> /articles/${target}`);
+    return res.redirect(301, `/articles/${target}`);
+  }
+  console.log(`[301 Permanent Redirect] /article/${slug} -> /articles/${slug}`);
+  return res.redirect(301, `/articles/${slug}`);
+});
+
+app.get('/articles/:slug', (req, res, next) => {
+  const slug = req.params.slug;
+  if (REDIRECTS_STORE[slug]) {
+    const target = REDIRECTS_STORE[slug].targetSlug;
+    console.log(`[301 Permanent Redirect] /articles/${slug} -> /articles/${target}`);
+    return res.redirect(301, `/articles/${target}`);
   }
   next();
 });
@@ -4551,16 +4593,206 @@ app.get('/google:code.html', (req, res) => {
 // Serve static assets from public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* ---------------- VITE MIDDLEWARE SETUP ---------------- */
+/* ---------------- DYNAMIC HTML & CANONICAL PRE-RENDERING ---------------- */
+
+/**
+ * Injects per-route canonical URL, SEO title, description, OpenGraph, Twitter, and Schema.org JSON-LD
+ * directly into the initial raw HTML document sent to web crawlers and browsers.
+ */
+function renderHtmlWithMeta(rawTemplate: string, reqPath: string): string {
+  let canonicalUrl = 'https://thesuburbanoutpost.com/';
+  let title = 'The Suburban Outpost - Off-Grid Living & Content Engine';
+  let description = 'Engineering residential self-reliance: quiet solar power storage, stealth rainwater catchment, clean-burn wood heat, and practical off-grid solutions for suburban and urban fringe homes.';
+  let ogType = 'website';
+  let ogImage = 'https://thesuburbanoutpost.com/favicon.svg';
+  let robotsTag = '';
+  let structuredDataScripts = '';
+
+  const cleanPath = reqPath.split('?')[0];
+
+  // Match /articles/:slug or /article/:slug
+  const articleMatch = cleanPath.match(/^\/articles?\/([a-zA-Z0-9_-]+)/);
+  if (articleMatch) {
+    const slug = articleMatch[1];
+    const art = ARTICLES_STORE.find(a => a.slug === slug);
+    if (art) {
+      canonicalUrl = `https://thesuburbanoutpost.com/articles/${art.slug}`;
+      title = `${art.title} | The Suburban Outpost`;
+      const rawDesc = art.metaDescription || art.summary || art.subtitle || '';
+      description = rawDesc.replace(/"/g, '&quot;');
+      ogType = 'article';
+      ogImage = art.featuredImage || 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86';
+
+      const schemaArticle = {
+        "@context": "https://schema.org",
+        "@type": "Article",
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": canonicalUrl
+        },
+        "headline": art.title,
+        "description": rawDesc,
+        "image": [ogImage],
+        "datePublished": art.publishedAt || new Date().toISOString(),
+        "dateModified": art.updatedAt || art.publishedAt || new Date().toISOString(),
+        "author": {
+          "@type": "Person",
+          "name": art.author?.name || "Chief Field Engineer"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "The Suburban Outpost",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://thesuburbanoutpost.com/favicon.svg"
+          }
+        }
+      };
+
+      let faqSchema = null;
+      const faqList = (art as any).faq || (art as any).faqs;
+      if (faqList && Array.isArray(faqList) && faqList.length > 0) {
+        faqSchema = {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          "mainEntity": faqList.map((f: any) => ({
+            "@type": "Question",
+            "name": f.question,
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": f.answer
+            }
+          }))
+        };
+      }
+
+      structuredDataScripts = `\n    <script type="application/ld+json">\n${JSON.stringify(schemaArticle, null, 2)}\n    </script>`;
+      if (faqSchema) {
+        structuredDataScripts += `\n    <script type="application/ld+json">\n${JSON.stringify(faqSchema, null, 2)}\n    </script>`;
+      }
+    } else {
+      canonicalUrl = `https://thesuburbanoutpost.com/articles/${slug}`;
+    }
+  } else if (cleanPath === '/calculators') {
+    canonicalUrl = 'https://thesuburbanoutpost.com/calculators';
+    title = 'Off-Grid Solar, Battery & Rainwater Calculators | The Suburban Outpost';
+    description = 'Interactive engineering calculators for residential solar sizing, battery storage amp-hours, and rooftop rainwater harvesting yields.';
+  } else if (cleanPath.startsWith('/category/')) {
+    const catSlug = cleanPath.replace('/category/', '');
+    canonicalUrl = `https://thesuburbanoutpost.com/category/${catSlug}`;
+    const catName = catSlug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    title = `${catName} Field Guides | The Suburban Outpost`;
+    description = `Practical guides and residential blueprints for ${catName} in suburban lots and urban fringe homesteads.`;
+  } else if (cleanPath === '/admin') {
+    canonicalUrl = 'https://thesuburbanoutpost.com/admin';
+    title = 'Outpost Autonomous Engine Console | The Suburban Outpost';
+    robotsTag = '\n    <meta name="robots" content="noindex, nofollow" />';
+  } else if (cleanPath === '/about' || cleanPath === '/editorial' || cleanPath === '/privacy' || cleanPath === '/affiliate') {
+    canonicalUrl = `https://thesuburbanoutpost.com${cleanPath}`;
+    const pageName = cleanPath.slice(1).charAt(0).toUpperCase() + cleanPath.slice(2);
+    title = `${pageName} Standards & Protocols | The Suburban Outpost`;
+  } else {
+    // Default / Homepage
+    canonicalUrl = 'https://thesuburbanoutpost.com/';
+  }
+
+  let html = rawTemplate;
+
+  // Title
+  html = html.replace(/<title>.*?<\/title>/i, `<title>${title}</title>`);
+
+  // Meta description
+  html = html.replace(/<meta\s+name=["']description["']\s+content=["'].*?["']\s*\/?>/i, `<meta name="description" content="${description}" />`);
+
+  // Canonical tag: Replace existing canonical tag
+  if (/<link\s+rel=["']canonical["']/i.test(html)) {
+    html = html.replace(/<link\s+rel=["']canonical["']\s+href=["'].*?["']\s*\/?>/i, `<link rel="canonical" href="${canonicalUrl}" />`);
+  } else {
+    html = html.replace('</head>', `    <link rel="canonical" href="${canonicalUrl}" />\n  </head>`);
+  }
+
+  // OpenGraph tags
+  html = html.replace(/<meta\s+property=["']og:title["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:title" content="${title}" />`);
+  html = html.replace(/<meta\s+property=["']og:description["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:description" content="${description}" />`);
+  html = html.replace(/<meta\s+property=["']og:url["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:url" content="${canonicalUrl}" />`);
+  html = html.replace(/<meta\s+property=["']og:type["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:type" content="${ogType}" />`);
+
+  // Twitter tags
+  html = html.replace(/<meta\s+name=["']twitter:title["']\s+content=["'].*?["']\s*\/?>/i, `<meta name="twitter:title" content="${title}" />`);
+  html = html.replace(/<meta\s+name=["']twitter:description["']\s+content=["'].*?["']\s*\/?>/i, `<meta name="twitter:description" content="${description}" />`);
+
+  // OG & Twitter Images
+  if (ogImage) {
+    if (html.includes('property="og:image"')) {
+      html = html.replace(/<meta\s+property=["']og:image["']\s+content=["'].*?["']\s*\/?>/i, `<meta property="og:image" content="${ogImage}" />`);
+    } else {
+      html = html.replace('</head>', `    <meta property="og:image" content="${ogImage}" />\n  </head>`);
+    }
+
+    if (html.includes('name="twitter:image"')) {
+      html = html.replace(/<meta\s+name=["']twitter:image["']\s+content=["'].*?["']\s*\/?>/i, `<meta name="twitter:image" content="${ogImage}" />`);
+    } else {
+      html = html.replace('</head>', `    <meta name="twitter:image" content="${ogImage}" />\n  </head>`);
+    }
+  }
+
+  // Robots & Structured Data
+  if (robotsTag || structuredDataScripts) {
+    html = html.replace('</head>', `${robotsTag}${structuredDataScripts}\n  </head>`);
+  }
+
+  return html;
+}
+
+/* ---------------- VITE & HTML SERVING SETUP ---------------- */
 
 async function startServer() {
-  // Mount Vite dev server in middleware mode
-  const vite = await createViteServer({
-    server: { middlewareMode: true },
-    appType: 'spa',
-  });
+  const isProd = fs.existsSync(path.resolve(__dirname, 'dist/index.html'));
 
-  app.use(vite.middlewares);
+  if (isProd) {
+    // In production, serve dist assets directory
+    app.use('/assets', express.static(path.join(__dirname, 'dist/assets')));
+  }
+
+  let vite: any = null;
+  if (!isProd) {
+    // Mount Vite dev server in middleware mode with custom appType to enable dynamic HTML pre-rendering
+    vite = await createViteServer({
+      server: { middlewareMode: true },
+      appType: 'custom',
+    });
+    app.use(vite.middlewares);
+  }
+
+  // Handle all page navigation requests with dynamic canonical & SEO injection
+  app.get('*', async (req, res, next) => {
+    // Skip static assets and internal endpoints
+    const isStaticAsset = /\.(js|css|json|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|map|txt|xml|html)$/i.test(req.path);
+    if (req.path.startsWith('/api/') || isStaticAsset) {
+      return next();
+    }
+
+    try {
+      let template = '';
+      if (isProd) {
+        template = fs.readFileSync(path.resolve(__dirname, 'dist/index.html'), 'utf-8');
+      } else {
+        template = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
+        if (vite) {
+          template = await vite.transformIndexHtml(req.originalUrl, template);
+        }
+      }
+
+      const html = renderHtmlWithMeta(template, req.path);
+      res.status(200).set({ 'Content-Type': 'text/html; charset=utf-8' }).end(html);
+    } catch (err: any) {
+      if (vite) {
+        vite.ssrFixStacktrace(err);
+      }
+      console.error('[HTML Pre-render Error]', err);
+      next(err);
+    }
+  });
 
   app.listen(PORT, '0.0.0.0', async () => {
     console.log(`[The Suburban Outpost] Server running on http://localhost:${PORT}`);
