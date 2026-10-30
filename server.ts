@@ -4917,6 +4917,10 @@ function renderHtmlWithMeta(rawTemplate: string, reqPath: string): string {
       if (faqSchema) {
         structuredDataScripts += `\n    <script type="application/ld+json">\n${JSON.stringify(faqSchema, null, 2)}\n    </script>`;
       }
+
+      // Bootstrap initial article state into window for instant React hydration
+      const safeArtJson = JSON.stringify(art).replace(/<\/script/gi, '<\\/script');
+      structuredDataScripts += `\n    <script>window.__INITIAL_ARTICLE__ = ${safeArtJson};</script>`;
     } else {
       canonicalUrl = `https://thesuburbanoutpost.com/articles/${slug}`;
     }

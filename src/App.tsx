@@ -28,11 +28,19 @@ export default function App() {
     ? parsePath(window.location.pathname) 
     : { view: 'reader' as const, articleSlug: null, category: 'All Dispatches', modal: null };
 
+  const preloadedArticle = typeof window !== 'undefined' && (window as any).__INITIAL_ARTICLE__
+    ? ((window as any).__INITIAL_ARTICLE__ as Article)
+    : null;
+
   const [currentView, setCurrentView] = useState<'reader' | 'console'>(initialRoute.view);
   const [activeCategory, setActiveCategory] = useState<string>(initialRoute.category);
   const [searchQuery, setSearchQuery] = useState<string>('');
-  const [selectedArticle, setSelectedArticle] = useState<Article | null>(null);
-  const [pendingSlug, setPendingSlug] = useState<string | null>(initialRoute.articleSlug);
+  const [selectedArticle, setSelectedArticle] = useState<Article | null>(preloadedArticle);
+  const [pendingSlug, setPendingSlug] = useState<string | null>(
+    preloadedArticle && initialRoute.articleSlug && preloadedArticle.slug === initialRoute.articleSlug 
+      ? null 
+      : initialRoute.articleSlug
+  );
   const [activeModal, setActiveModal] = useState<'about' | 'editorial' | 'affiliate' | 'privacy' | null>(initialRoute.modal);
   const [showAnalyticsModal, setShowAnalyticsModal] = useState<boolean>(false);
   const [showRebateModal, setShowRebateModal] = useState<boolean>(false);
@@ -43,7 +51,7 @@ export default function App() {
     return (typeof window !== 'undefined' && sessionStorage.getItem('outpost_admin_user')) || 'admin';
   });
 
-  const [articles, setArticles] = useState<Article[]>([]);
+  const [articles, setArticles] = useState<Article[]>(preloadedArticle ? [preloadedArticle] : []);
   const [keywords, setKeywords] = useState<KeywordOpportunity[]>([]);
   const [pipelineMetrics, setPipelineMetrics] = useState<PipelineMetrics>({
     totalKeywordClusters: 6,
