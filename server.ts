@@ -4611,11 +4611,236 @@ app.get('/google:code.html', (req, res) => {
 // Serve static assets from public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-/* ---------------- DYNAMIC HTML & CANONICAL PRE-RENDERING ---------------- */
+/* ---------------- DYNAMIC HTML, SSR PRE-RENDERING & CANONICAL INJECTION ---------------- */
+
+function formatInlineMarkdown(text: string): string {
+  if (!text) return '';
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" rel="noopener" class="text-amber-400 underline">$1</a>')
+    .replace(/`([^`]+)`/g, '<code class="bg-stone-900 px-1 py-0.5 rounded text-amber-300 font-mono text-xs">$1</code>');
+}
+
+function renderMarkdownToHtml(markdown: string): string {
+  if (!markdown) return '';
+  const lines = markdown.split(/\r?\n/);
+  const htmlParts: string[] = [];
+  let i = 0;
+  let inList = false;
+  let inOrderedList = false;
+
+  const closeLists = () => {
+    if (inList) { htmlParts.push('</ul>'); inList = false; }
+    if (inOrderedList) { htmlParts.push('</ol>'); inOrderedList = false; }
+  };
+
+  while (i < lines.length) {
+    const rawLine = lines[i];
+    const trimmed = rawLine.trim();
+
+    if (!trimmed) {
+      closeLists();
+      i++;
+      continue;
+    }
+
+    // Code blocks
+    if (trimmed.startsWith('```')) {
+      closeLists();
+      i++;
+      const codeLines: string[] = [];
+      while (i < lines.length && !lines[i].trim().startsWith('```')) {
+        codeLines.push(lines[i]);
+        i++;
+      }
+      i++;
+      const safeCode = codeLines.join('\n').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      htmlParts.push(`<pre class="bg-stone-900 p-4 rounded-xl border border-stone-800 font-mono text-xs text-amber-200 overflow-x-auto my-4"><code>${safeCode}</code></pre>`);
+      continue;
+    }
+
+    // Horizontal Rule
+    if (trimmed === '---' || trimmed === '***') {
+      closeLists();
+      htmlParts.push('<hr class="border-stone-800 my-8" />');
+      i++;
+      continue;
+    }
+
+    // Headings
+    if (trimmed.startsWith('## ') && !trimmed.startsWith('### ')) {
+      closeLists();
+      const content = formatInlineMarkdown(trimmed.replace(/^##\s+/, ''));
+      htmlParts.push(`<h2 class="text-2xl sm:text-3xl font-serif font-bold text-stone-100 mt-8 mb-4 border-b border-stone-800 pb-2">${content}</h2>`);
+      i++;
+      continue;
+    }
+    if (trimmed.startsWith('### ')) {
+      closeLists();
+      const content = formatInlineMarkdown(trimmed.replace(/^###\s+/, ''));
+      htmlParts.push(`<h3 class="text-xl sm:text-2xl font-serif font-semibold text-amber-100 mt-6 mb-3">${content}</h3>`);
+      i++;
+      continue;
+    }
+    if (trimmed.startsWith('#### ')) {
+      closeLists();
+      const content = formatInlineMarkdown(trimmed.replace(/^####\s+/, ''));
+      htmlParts.push(`<h4 class="text-lg font-mono font-bold text-amber-400 mt-4 mb-2 uppercase tracking-wide">${content}</h4>`);
+      i++;
+      continue;
+    }
+
+    // Blockquote
+    if (trimmed.startsWith('>')) {
+      closeLists();
+      const quote = formatInlineMarkdown(trimmed.replace(/^>\s*/, ''));
+      htmlParts.push(`<blockquote class="border-l-4 border-amber-500 pl-4 py-1 italic text-stone-300 my-4 bg-stone-900/40 rounded-r"><p>${quote}</p></blockquote>`);
+      i++;
+      continue;
+    }
+
+    // Unordered list item
+    if (trimmed.startsWith('* ') || trimmed.startsWith('- ')) {
+      if (inOrderedList) { htmlParts.push('</ol>'); inOrderedList = false; }
+      if (!inList) { htmlParts.push('<ul class="list-disc pl-6 space-y-1 my-3 text-stone-300">'); inList = true; }
+      const itemText = formatInlineMarkdown(trimmed.replace(/^(\*|-)\s+/, ''));
+      htmlParts.push(`<li>${itemText}</li>`);
+      i++;
+      continue;
+    }
+
+    // Ordered list item
+    if (/^\d+\.\s+/.test(trimmed)) {
+      if (inList) { htmlParts.push('</ul>'); inList = false; }
+      if (!inOrderedList) { htmlParts.push('<ol class="list-decimal pl-6 space-y-1 my-3 text-stone-300">'); inOrderedList = true; }
+      const itemText = formatInlineMarkdown(trimmed.replace(/^\d+\.\s+/, ''));
+      htmlParts.push(`<li>${itemText}</li>`);
+      i++;
+      continue;
+    }
+
+    // Regular paragraph
+    closeLists();
+    const para = formatInlineMarkdown(trimmed);
+    htmlParts.push(`<p class="leading-relaxed text-stone-300 my-4">${para}</p>`);
+    i++;
+  }
+
+  closeLists();
+  return htmlParts.join('\n');
+}
+
+function renderArticleHtml(art: any): string {
+  const bodyHtml = renderMarkdownToHtml(art.contentMarkdown || '');
+  const authorName = art.author?.name || 'Roger Sikes';
+  const authorRole = art.author?.role || 'Lead Field Editor';
+  const publishedDate = art.publishedAt || '';
+  const readingTime = art.readingTime || '10 min read';
+  const image = art.featuredImage || '';
+  const caption = art.imageCaption || art.title;
+
+  let faqsHtml = '';
+  const faqList = art.faq || art.faqs;
+  if (Array.isArray(faqList) && faqList.length > 0) {
+    const items = faqList.map((f: any) => `
+      <div class="faq-card p-4 rounded-xl border border-stone-800 bg-stone-900/40 mb-4">
+        <h4 class="font-serif font-bold text-lg text-amber-200 mb-2">${f.question}</h4>
+        <p class="text-stone-300 text-sm leading-relaxed">${f.answer}</p>
+      </div>
+    `).join('');
+    faqsHtml = `
+      <section class="faqs-container mt-12 pt-8 border-t border-stone-800">
+        <h3 class="text-2xl font-serif font-bold text-stone-100 mb-6">Frequently Asked Questions</h3>
+        ${items}
+      </section>
+    `;
+  }
+
+  let productsHtml = '';
+  if (Array.isArray(art.affiliateProducts) && art.affiliateProducts.length > 0) {
+    const prodCards = art.affiliateProducts.map((p: any) => `
+      <div class="product-card p-4 rounded-xl border border-stone-800 bg-stone-900/60 my-3">
+        <div class="font-bold text-stone-200">${p.name || ''}</div>
+        ${p.description ? `<p class="text-sm text-stone-400 mt-1">${p.description}</p>` : ''}
+        ${p.amazonLink ? `<a href="${p.amazonLink}" rel="sponsored noopener" target="_blank" class="inline-block mt-2 text-xs text-amber-400 font-mono underline font-semibold">Check Current Price on Amazon &rarr;</a>` : ''}
+      </div>
+    `).join('');
+    productsHtml = `
+      <section class="products-container mt-10 pt-6 border-t border-stone-800">
+        <h3 class="text-xl font-serif font-bold text-stone-100 mb-4">Recommended Field Hardware & Components</h3>
+        ${prodCards}
+      </section>
+    `;
+  }
+
+  return `
+    <div class="min-h-screen bg-stone-950 text-stone-100">
+      <article class="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+        <header class="mb-8 border-b border-stone-800 pb-6">
+          <div class="text-xs font-mono text-amber-500 uppercase tracking-wider mb-3">
+            <span>${art.category || 'Field Dispatch'}</span> • <span>${readingTime}</span> • <span>${publishedDate}</span>
+          </div>
+          <h1 class="font-serif text-3xl sm:text-5xl font-extrabold text-stone-100 mb-4 leading-tight">${art.title}</h1>
+          ${art.subtitle ? `<p class="text-lg text-stone-300 font-light leading-relaxed mb-6">${art.subtitle}</p>` : ''}
+          <div class="flex items-center space-x-3 text-sm text-stone-400">
+            <span>Written by <strong class="text-stone-200">${authorName}</strong> — ${authorRole}</span>
+          </div>
+        </header>
+
+        ${image ? `
+        <figure class="mb-8 rounded-2xl overflow-hidden border border-stone-800">
+          <img src="${image}" alt="${art.title}" class="w-full h-auto max-h-[500px] object-cover" />
+          ${caption ? `<figcaption class="p-3 bg-stone-900 text-xs text-stone-400 font-mono border-t border-stone-800">${caption}</figcaption>` : ''}
+        </figure>
+        ` : ''}
+
+        <div class="article-content space-y-4 text-stone-300 text-base sm:text-lg leading-relaxed">
+          ${bodyHtml}
+        </div>
+
+        ${productsHtml}
+        ${faqsHtml}
+      </article>
+    </div>
+  `;
+}
+
+function renderHomepageHtml(): string {
+  const recentArticles = ARTICLES_STORE.slice(0, 10);
+  const listItems = recentArticles.map(a => `
+    <article class="p-5 rounded-2xl bg-stone-900 border border-stone-800 mb-6">
+      <div class="text-xs font-mono text-amber-500 mb-1 uppercase">${a.category || 'Guide'} • ${a.readingTime || '10 min'}</div>
+      <h2 class="text-2xl font-serif font-bold text-stone-100 mb-2">
+        <a href="/articles/${a.slug}" class="hover:text-amber-400">${a.title}</a>
+      </h2>
+      <p class="text-stone-300 text-sm mb-3">${a.summary || a.subtitle || ''}</p>
+      <a href="/articles/${a.slug}" class="text-xs font-mono text-amber-400 font-semibold underline">Read Guide &rarr;</a>
+    </article>
+  `).join('');
+
+  return `
+    <div class="min-h-screen bg-stone-950 text-stone-100">
+      <main class="max-w-5xl mx-auto px-4 py-8">
+        <header class="mb-10 text-center">
+          <h1 class="text-4xl sm:text-5xl font-serif font-extrabold text-stone-100 mb-4">The Suburban Outpost</h1>
+          <p class="text-lg text-stone-300 max-w-2xl mx-auto">Engineering residential self-reliance: quiet solar power storage, stealth rainwater catchment, clean-burn wood heat, and practical off-grid solutions.</p>
+        </header>
+        <section class="latest-dispatches">
+          <h3 class="text-xl font-serif font-bold text-stone-200 pb-3 mb-6 border-b border-stone-800">Latest Field Dispatches</h3>
+          ${listItems}
+        </section>
+      </main>
+    </div>
+  `;
+}
 
 /**
- * Injects per-route canonical URL, SEO title, description, OpenGraph, Twitter, and Schema.org JSON-LD
- * directly into the initial raw HTML document sent to web crawlers and browsers.
+ * Injects per-route canonical URL, SEO title, description, OpenGraph, Twitter, Schema.org JSON-LD,
+ * AND full semantic HTML body directly into the initial raw HTML document sent to Googlebot and web crawlers.
  */
 function renderHtmlWithMeta(rawTemplate: string, reqPath: string): string {
   let canonicalUrl = 'https://thesuburbanoutpost.com/';
@@ -4625,6 +4850,7 @@ function renderHtmlWithMeta(rawTemplate: string, reqPath: string): string {
   let ogImage = 'https://thesuburbanoutpost.com/favicon.svg';
   let robotsTag = '';
   let structuredDataScripts = '';
+  let ssrBodyHtml = '';
 
   const cleanPath = reqPath.split('?')[0];
 
@@ -4640,6 +4866,9 @@ function renderHtmlWithMeta(rawTemplate: string, reqPath: string): string {
       description = rawDesc.replace(/"/g, '&quot;');
       ogType = 'article';
       ogImage = art.featuredImage || 'https://images.unsplash.com/photo-1513836279014-a89f7a76ae86';
+
+      // Pre-render the full article content directly into the SSR body
+      ssrBodyHtml = renderArticleHtml(art);
 
       const schemaArticle = {
         "@context": "https://schema.org",
@@ -4713,6 +4942,7 @@ function renderHtmlWithMeta(rawTemplate: string, reqPath: string): string {
   } else {
     // Default / Homepage
     canonicalUrl = 'https://thesuburbanoutpost.com/';
+    ssrBodyHtml = renderHomepageHtml();
   }
 
   let html = rawTemplate;
@@ -4758,6 +4988,11 @@ function renderHtmlWithMeta(rawTemplate: string, reqPath: string): string {
   // Robots & Structured Data
   if (robotsTag || structuredDataScripts) {
     html = html.replace('</head>', `${robotsTag}${structuredDataScripts}\n  </head>`);
+  }
+
+  // Inject Pre-rendered SSR Body into <div id="root"></div> for Googlebot & SEO Crawlers
+  if (ssrBodyHtml) {
+    html = html.replace('<div id="root"></div>', `<div id="root">${ssrBodyHtml}</div>`);
   }
 
   return html;
