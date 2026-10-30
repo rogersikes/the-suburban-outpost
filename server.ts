@@ -2282,34 +2282,38 @@ function initAutonomousWorker() {
   const intervalMs = AUTOMATION_CONFIG.pacingMode === 'turbo' ? 45000 : pacedIntervalMs;
 
   autonomousWorkerInterval = setInterval(async () => {
-    if (!AUTOMATION_CONFIG.autopilotEnabled) return;
+    try {
+      if (!AUTOMATION_CONFIG.autopilotEnabled) return;
 
-    checkAndResetDailyCycle();
+      checkAndResetDailyCycle();
 
-    // Check if daily quota reached in configured timezone
-    const todayCount = getTodayPublishedCount();
-    if (todayCount >= AUTOMATION_CONFIG.targetDailyGoal) {
-      return;
-    }
+      // Check if daily quota reached in configured timezone
+      const todayCount = getTodayPublishedCount();
+      if (todayCount >= AUTOMATION_CONFIG.targetDailyGoal) {
+        return;
+      }
 
-    // Check unwritten keywords count; if low, replenish automatically
-    const unwrittenCount = DATAFORSEO_DATABASE.filter(k => 
-      !ARTICLES_STORE.some(a => a.primaryKeyword.toLowerCase() === k.keyword.toLowerCase())
-    ).length;
+      // Check unwritten keywords count; if low, replenish automatically
+      const unwrittenCount = DATAFORSEO_DATABASE.filter(k => 
+        !ARTICLES_STORE.some(a => a.primaryKeyword.toLowerCase() === k.keyword.toLowerCase())
+      ).length;
 
-    if (unwrittenCount < 10) {
-      replenishKeywordQueue();
-    }
+      if (unwrittenCount < 10) {
+        replenishKeywordQueue();
+      }
 
-    // Find next unwritten keyword from DataForSEO vault
-    const nextKw = DATAFORSEO_DATABASE.find(k => 
-      !ARTICLES_STORE.some(a => a.primaryKeyword.toLowerCase() === k.keyword.toLowerCase())
-    );
+      // Find next unwritten keyword from DataForSEO vault
+      const nextKw = DATAFORSEO_DATABASE.find(k => 
+        !ARTICLES_STORE.some(a => a.primaryKeyword.toLowerCase() === k.keyword.toLowerCase())
+      );
 
-    if (nextKw) {
-      console.log(`[Auto-Writer] Writing scheduled article for: "${nextKw.keyword}" (Today: ${todayCount + 1}/${AUTOMATION_CONFIG.targetDailyGoal})...`);
-      publishArticleForKeyword(nextKw);
-      lastAutoWriteTime = new Date().toISOString();
+      if (nextKw) {
+        console.log(`[Auto-Writer] Writing scheduled article for: "${nextKw.keyword}" (Today: ${todayCount + 1}/${AUTOMATION_CONFIG.targetDailyGoal})...`);
+        publishArticleForKeyword(nextKw);
+        lastAutoWriteTime = new Date().toISOString();
+      }
+    } catch (workerErr) {
+      console.error('[Autonomous Worker Error]', workerErr);
     }
   }, intervalMs);
 }
@@ -4759,10 +4763,20 @@ function renderHtmlWithMeta(rawTemplate: string, reqPath: string): string {
   return html;
 }
 
+/* ---------------- PROCESS-LEVEL ERROR GUARDS ---------------- */
+
+process.on('uncaughtException', (err: any) => {
+  console.error('[Uncaught Exception]', err);
+});
+
+process.on('unhandledRejection', (reason: any) => {
+  console.error('[Unhandled Rejection]', reason);
+});
+
 /* ---------------- VITE & HTML SERVING SETUP ---------------- */
 
 async function startServer() {
-  const isProd = fs.existsSync(path.resolve(__dirname, 'dist/index.html'));
+  const isProd = process.env.NODE_ENV === 'production' && fs.existsSync(path.resolve(__dirname, 'dist/index.html'));
 
   if (isProd) {
     // In production, serve dist assets directory
@@ -4771,7 +4785,7 @@ async function startServer() {
 
   let vite: any = null;
   if (!isProd) {
-    // Mount Vite dev server in middleware mode with custom appType to enable dynamic HTML pre-rendering
+    // In dev mode, always mount Vite dev server with middlewareMode
     vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'custom',
@@ -4781,15 +4795,16 @@ async function startServer() {
 
   // Handle all page navigation requests with dynamic canonical & SEO injection
   app.get('*', async (req, res, next) => {
-    // Skip static assets and internal endpoints
-    const isStaticAsset = /\.(js|css|json|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|map|txt|xml|html)$/i.test(req.path);
-    if (req.path.startsWith('/api/') || isStaticAsset) {
+    // Pass Vite development internal modules and static assets through to Vite/Express
+    const isViteInternal = req.path.startsWith('/@') || req.path.startsWith('/node_modules/') || req.path.startsWith('/src/');
+    const isStaticAsset = /\.(js|mjs|cjs|ts|tsx|jsx|css|json|png|jpg|jpeg|gif|svg|ico|webp|woff|woff2|ttf|map|txt|xml|html)$/i.test(req.path);
+    if (req.path.startsWith('/api/') || isViteInternal || isStaticAsset) {
       return next();
     }
 
     try {
       let template = '';
-      if (isProd) {
+      if (isProd && fs.existsSync(path.resolve(__dirname, 'dist/index.html'))) {
         template = fs.readFileSync(path.resolve(__dirname, 'dist/index.html'), 'utf-8');
       } else {
         template = fs.readFileSync(path.resolve(__dirname, 'index.html'), 'utf-8');
@@ -4809,17 +4824,27 @@ async function startServer() {
     }
   });
 
-  app.listen(PORT, '0.0.0.0', async () => {
+  const server = app.listen(PORT, '0.0.0.0', async () => {
     console.log(`[The Suburban Outpost] Server running on http://localhost:${PORT}`);
-    // 1. Verify live DataForSEO API connection & pull balance
-    const hasCredits = await initDataForSeoConnection();
-    // 2. Query DataForSEO Google Ads API ONLY if account has sufficient positive balance
-    if (hasCredits && DATAFORSEO_CONFIG.balance > 0) {
-      await pullLiveKeywordsFromDataForSeo();
+    try {
+      // 1. Verify live DataForSEO API connection & pull balance
+      const hasCredits = await initDataForSeoConnection();
+      // 2. Query DataForSEO Google Ads API ONLY if account has sufficient positive balance
+      if (hasCredits && DATAFORSEO_CONFIG.balance > 0) {
+        await pullLiveKeywordsFromDataForSeo();
+      }
+      // 3. Start background auto-writer worker
+      initAutonomousWorker();
+    } catch (startupErr) {
+      console.error('[Background Startup Error]', startupErr);
     }
-    // 3. Start background auto-writer worker
-    initAutonomousWorker();
+  });
+
+  server.on('error', (err: any) => {
+    console.error('[HTTP Server Listen Error]', err);
   });
 }
 
-startServer();
+startServer().catch(err => {
+  console.error('[Fatal Server Startup Error]', err);
+});
