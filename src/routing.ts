@@ -4,7 +4,7 @@ export interface RouteState {
   view: 'reader' | 'console';
   articleSlug: string | null;
   category: string;
-  modal: 'about' | 'editorial' | 'affiliate' | 'privacy' | null;
+  modal: 'about' | 'editorial' | 'affiliate' | 'privacy' | 'contact' | 'terms' | null;
 }
 
 export const CATEGORY_MAP: { [slug: string]: string } = {
@@ -51,6 +51,12 @@ export function parsePath(pathname: string): RouteState {
   }
   if (clean === '/privacy' || clean === '/privacy-policy') {
     return { view: 'reader', articleSlug: null, category: 'All Dispatches', modal: 'privacy' };
+  }
+  if (clean === '/contact' || clean === '/contact-us') {
+    return { view: 'reader', articleSlug: null, category: 'All Dispatches', modal: 'contact' };
+  }
+  if (clean === '/terms' || clean === '/terms-of-service' || clean === '/disclaimer') {
+    return { view: 'reader', articleSlug: null, category: 'All Dispatches', modal: 'terms' };
   }
 
   // Article route: /articles/:slug or /article/:slug

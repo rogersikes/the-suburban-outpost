@@ -2624,7 +2624,9 @@ app.get('/sitemap.xml', (req, res) => {
     { path: '/about', priority: '0.60' },
     { path: '/editorial', priority: '0.60' },
     { path: '/affiliate', priority: '0.60' },
-    { path: '/privacy', priority: '0.50' }
+    { path: '/privacy', priority: '0.50' },
+    { path: '/contact', priority: '0.50' },
+    { path: '/terms', priority: '0.50' }
   ];
   TRUST_PAGES.forEach(page => {
     xmlEntries.push(`  <url>
@@ -2680,6 +2682,13 @@ Sitemap: ${baseUrl}/sitemap.xml
   res.send(robots);
 });
 
+// Authorized Digital Sellers (ads.txt) for Google AdSense verification
+app.get('/ads.txt', (req, res) => {
+  const adsTxt = `google.com, pub-7519914520551172, DIRECT, f08c47fec0942fa0\n`;
+  res.header('Content-Type', 'text/plain; charset=utf-8');
+  res.send(adsTxt);
+});
+
 // Sitemap statistics for admin console
 app.get('/api/sitemap/stats', (req, res) => {
   const baseUrl = 'https://thesuburbanoutpost.com';
@@ -2687,10 +2696,10 @@ app.get('/api/sitemap/stats', (req, res) => {
     sitemapUrl: `${baseUrl}/sitemap.xml`,
     robotsUrl: `${baseUrl}/robots.txt`,
     domain: 'thesuburbanoutpost.com',
-    totalIndexedUrls: 1 + SITEMAP_CATEGORIES.length + 4 + ARTICLES_STORE.length,
+    totalIndexedUrls: 1 + SITEMAP_CATEGORIES.length + 6 + ARTICLES_STORE.length,
     articlesCount: ARTICLES_STORE.length,
     categoriesCount: SITEMAP_CATEGORIES.length,
-    pagesCount: 4,
+    pagesCount: 6,
     lastUpdated: new Date().toISOString()
   });
 });
@@ -4838,6 +4847,232 @@ function renderHomepageHtml(): string {
   `;
 }
 
+function renderInstitutionalHtml(cleanPath: string): string {
+  let pageContent = '';
+
+  if (cleanPath === '/about') {
+    pageContent = `
+      <header class="mb-8 border-b border-stone-800 pb-6">
+        <div class="text-xs font-mono text-amber-500 uppercase tracking-wider mb-2">Institutional Blueprint • Core Principles</div>
+        <h1 class="font-serif text-3xl sm:text-5xl font-extrabold text-stone-100 mb-4 leading-tight">About The Suburban Outpost</h1>
+        <p class="text-lg text-stone-300 font-light leading-relaxed">Quiet, code-compliant residential engineering for suburban lots, dense subdivisions, and urban fringe homesteads.</p>
+      </header>
+
+      <section class="space-y-6 text-stone-300 text-base sm:text-lg leading-relaxed">
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">Our Core Mission</h2>
+        <p>Most off-grid guides assume you own 40 acres of unrestricted timberland in Idaho or Alaska where noise, setback lines, visual camouflage, and municipal building inspectors do not exist. In contrast, <strong>The Suburban Outpost</strong> was built from the ground up to solve the real-world engineering constraints facing the 175+ million people living in modern American subdivisions, master-planned developments, and suburban fringe townships.</p>
+        
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">Four Guiding Engineering Pillars</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 my-6">
+          <div class="p-5 rounded-xl border border-stone-800 bg-stone-900/60">
+            <h3 class="font-bold text-stone-100 text-lg mb-2 text-amber-400">1. Density-Appropriate Engineering</h3>
+            <p class="text-stone-400 text-sm">Every schematic and installation is evaluated against small property lines, zero lot lines, and neighbor proximity.</p>
+          </div>
+          <div class="p-5 rounded-xl border border-stone-800 bg-stone-900/60">
+            <h3 class="font-bold text-stone-100 text-lg mb-2 text-amber-400">2. Acoustical & Visual Stealth</h3>
+            <p class="text-stone-400 text-sm">We enforce strict sound ceilings (&lt;35dB continuous), vibration isolation, and hidden rainwater harvesting designs that comply with strict HOA aesthetics.</p>
+          </div>
+          <div class="p-5 rounded-xl border border-stone-800 bg-stone-900/60">
+            <h3 class="font-bold text-stone-100 text-lg mb-2 text-amber-400">3. Building Code & Fire Safety Compliance</h3>
+            <p class="text-stone-400 text-sm">We engineer all circuits to the National Electrical Code (NEC / NFPA 70), EPA clean air wood stove particulate standards, and municipal plumbing codes.</p>
+          </div>
+          <div class="p-5 rounded-xl border border-stone-800 bg-stone-900/60">
+            <h3 class="font-bold text-stone-100 text-lg mb-2 text-amber-400">4. Zero Snake-Oil Policy</h3>
+            <p class="text-stone-400 text-sm">No perpetual energy gimmicks, unverified gravity generators, or dubious water purifiers. Every system is rooted in verified thermodynamics and real-world amp-draws.</p>
+          </div>
+        </div>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">Editorial Staff & Field Team</h2>
+        <div class="p-6 rounded-2xl border border-stone-800 bg-stone-900 my-6">
+          <div class="flex items-center space-x-4 mb-4">
+            <div class="w-14 h-14 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-serif font-bold text-2xl">RS</div>
+            <div>
+              <div class="font-serif font-bold text-xl text-stone-100">Roger Sikes</div>
+              <div class="text-xs font-mono text-amber-400">Chief Field Engineer & Lead Editor</div>
+            </div>
+          </div>
+          <p class="text-sm text-stone-300 leading-relaxed">Roger Sikes has over 15 years of hands-on experience designing off-grid residential electrical systems, high-efficiency secondary heating retrofits, and closed-loop rainwater catchment. His background spans residential electrical wiring under NEC guidelines, LiFePO4 battery storage arrays, and micro-hydro and hybrid solar inverters. Roger leads all hardware evaluation, teardowns, and schematic reviews for The Suburban Outpost.</p>
+        </div>
+      </section>
+    `;
+  } else if (cleanPath === '/editorial') {
+    pageContent = `
+      <header class="mb-8 border-b border-stone-800 pb-6">
+        <div class="text-xs font-mono text-amber-500 uppercase tracking-wider mb-2">Standards & Protocol • Quality Assurance</div>
+        <h1 class="font-serif text-3xl sm:text-5xl font-extrabold text-stone-100 mb-4 leading-tight">Editorial Policy & Testing Standards</h1>
+        <p class="text-lg text-stone-300 font-light leading-relaxed">Our editorial commitment to technical accuracy, physical load testing, and total independence from manufacturers.</p>
+      </header>
+
+      <section class="space-y-6 text-stone-300 text-base sm:text-lg leading-relaxed">
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">1. Editorial Independence</h2>
+        <p>The Suburban Outpost maintains strict editorial independence. Our reviews, hardware recommendations, and construction blueprints are generated solely based on technical merit, measured performance, and safety metrics. No manufacturer, distributor, or advertiser ever receives preferential coverage, positive reviews, or guaranteed placement.</p>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">2. Physical Bench & Field Testing Protocol</h2>
+        <p>When our team reviews battery systems, inverters, rainwater filters, or wood stoves, we adhere to repeatable empirical tests:</p>
+        <ul class="list-disc pl-6 space-y-2 text-stone-300">
+          <li><strong>Electrical Load Capacity:</strong> We verify inverter surge claims and continuous watt output using calibrated resistive and inductive heat loads, monitoring thermal dissipation with FLIR thermal imaging.</li>
+          <li><strong>Acoustic Compliance:</strong> Decibel ratings are recorded using calibrated sound level meters at 1-meter, 3-meter, and 7-meter distances to verify true neighborhood stealth (&lt;35dB continuous background threshold).</li>
+          <li><strong>Filtration Verification:</strong> Gravity-fed water purifiers are evaluated against turbidity and NSF/ANSI microbiological standards.</li>
+        </ul>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">3. Fact-Checking & Safety Verification</h2>
+        <p>Every article published on The Suburban Outpost undergoes technical cross-referencing against the <em>National Electrical Code (NFPA 70)</em>, <em>International Residential Code (IRC)</em>, and EPA emissions registries. Schematics are reviewed to ensure wire gauge (AWG), overcurrent protection devices (circuit breakers and Class T fuses), and grounding conductor sizing comply with industry safety standards.</p>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">4. Corrections & Errata Policy</h2>
+        <p>When an error, outdated component ASIN, or code amendment is brought to our attention, we investigate immediately. Verified technical corrections are updated directly in the guide with an errata note. Readers and engineers are encouraged to submit corrections directly to <a href="mailto:editorial@thesuburbanoutpost.com" class="text-amber-400 underline">editorial@thesuburbanoutpost.com</a>.</p>
+      </section>
+    `;
+  } else if (cleanPath === '/affiliate') {
+    pageContent = `
+      <header class="mb-8 border-b border-stone-800 pb-6">
+        <div class="text-xs font-mono text-amber-500 uppercase tracking-wider mb-2">FTC 16 CFR § 255 • Monetization Disclosure</div>
+        <h1 class="font-serif text-3xl sm:text-5xl font-extrabold text-stone-100 mb-4 leading-tight">Affiliate & Advertising Disclosure</h1>
+        <p class="text-lg text-stone-300 font-light leading-relaxed">Full transparency regarding how The Suburban Outpost earns revenue to fund independent hardware bench testing.</p>
+      </header>
+
+      <section class="space-y-6 text-stone-300 text-base sm:text-lg leading-relaxed">
+        <div class="p-5 rounded-2xl border border-amber-500/30 bg-amber-950/20 text-stone-200 mb-6">
+          <p class="font-semibold text-amber-300 mb-1">FTC Compliance Statement</p>
+          <p class="text-sm">In compliance with the Federal Trade Commission (FTC) guidelines (16 CFR § 255), please assume that any outbound link to a product on The Suburban Outpost may be an affiliate or sponsored link from which we earn a commission at no additional cost to you.</p>
+        </div>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">Amazon Associates Program</h2>
+        <p><strong>The Suburban Outpost</strong> is a participant in the Amazon Services LLC Associates Program, an affiliate advertising program designed to provide a means for sites to earn advertising fees by advertising and linking to Amazon.com and affiliated sites. As an Amazon Associate, we earn from qualifying purchases using our partner tag <code class="bg-stone-900 text-amber-400 px-2 py-0.5 rounded font-mono">thesuburbanoutpost-20</code>.</p>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">Google AdSense Network</h2>
+        <p>This website displays contextual online banner advertisements served by the Google AdSense network (<code class="bg-stone-900 text-amber-400 px-2 py-0.5 rounded font-mono">pub-7519914520551172</code>). These advertisements are automatically generated based on the content of the page and the user's browsing preferences. Google and third-party advertising vendors use cookies to serve personalized ads based on past visits.</p>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">Strict Separation Between Revenue and Editorial Verdicts</h2>
+        <p>Our participation in affiliate programs and ad networks never influences our testing conclusions, wiring warnings, or product ratings. We routinely discourage readers from purchasing unreliable or dangerous products, regardless of whether those products offer high affiliate commissions. We only recommend hardware that we have either bench tested ourselves or thoroughly verified against manufacturer technical specification sheets and regulatory listings (UL, ETL, EPA).</p>
+      </section>
+    `;
+  } else if (cleanPath === '/privacy') {
+    pageContent = `
+      <header class="mb-8 border-b border-stone-800 pb-6">
+        <div class="text-xs font-mono text-amber-500 uppercase tracking-wider mb-2">Legal Compliance • Updated 2026</div>
+        <h1 class="font-serif text-3xl sm:text-5xl font-extrabold text-stone-100 mb-4 leading-tight">Privacy Policy</h1>
+        <p class="text-lg text-stone-300 font-light leading-relaxed">How The Suburban Outpost collects, manages, and protects your information, including cookies and advertising disclosures.</p>
+      </header>
+
+      <section class="space-y-6 text-stone-300 text-base sm:text-lg leading-relaxed">
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">1. Information We Collect</h2>
+        <p>When you visit <strong>thesuburbanoutpost.com</strong>, our web servers automatically log standard technical data transmitted by your browser. This includes your Internet Protocol (IP) address, browser type and version, referral source, pages viewed, time spent on pages, and timestamp of the visit. This telemetry is utilized exclusively for server diagnostics, DDOS mitigation, and optimizing site performance.</p>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">2. Google AdSense & DoubleClick DART Cookies</h2>
+        <p>We partner with Google AdSense to display contextual and personalized advertising. Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to our website or other websites on the Internet.</p>
+        <ul class="list-disc pl-6 space-y-2 text-stone-300">
+          <li>Google's use of advertising cookies enables it and its partners to serve ads to our users based on their visit to our sites and/or other sites on the Internet.</li>
+          <li>Users may opt out of personalized advertising by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener" class="text-amber-400 underline font-semibold">Google Ads Settings</a>.</li>
+          <li>Alternatively, you can opt out of a third-party vendor's use of cookies for personalized advertising by visiting the Network Advertising Initiative opt-out page at <a href="https://www.aboutads.info" target="_blank" rel="noopener" class="text-amber-400 underline font-semibold">www.aboutads.info</a>.</li>
+        </ul>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">3. Affiliate Links & Tracking Cookies</h2>
+        <p>When you click on an outbound affiliate link (e.g., to Amazon.com), a tracking cookie is deposited on your browser by the respective merchant platform. This cookie informs the vendor that the referral originated from The Suburban Outpost. No personally identifiable information (PII) is accessed or retained by The Suburban Outpost during this transaction.</p>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">4. GDPR and CCPA/CPRA Privacy Rights</h2>
+        <p>Under the European General Data Protection Regulation (GDPR) and the California Consumer Privacy Act (CCPA), visitors have the right to request access to their data, request deletion, and opt out of the sale or sharing of their personal information. We do not sell your personal information. For any data inquiries, contact us at <a href="mailto:editorial@thesuburbanoutpost.com" class="text-amber-400 underline">editorial@thesuburbanoutpost.com</a>.</p>
+      </section>
+    `;
+  } else if (cleanPath === '/contact') {
+    pageContent = `
+      <header class="mb-8 border-b border-stone-800 pb-6">
+        <div class="text-xs font-mono text-amber-500 uppercase tracking-wider mb-2">Direct Communications • Inquiries & Support</div>
+        <h1 class="font-serif text-3xl sm:text-5xl font-extrabold text-stone-100 mb-4 leading-tight">Contact The Suburban Outpost</h1>
+        <p class="text-lg text-stone-300 font-light leading-relaxed">Reach our engineering desk, field test editors, or business and compliance department.</p>
+      </header>
+
+      <section class="space-y-6 text-stone-300 text-base sm:text-lg leading-relaxed">
+        <p>We welcome technical questions, schematic peer reviews, and errata corrections from licensed electricians, plumbing contractors, solar installers, and self-reliance builders.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 my-8">
+          <div class="p-6 rounded-2xl border border-stone-800 bg-stone-900/60">
+            <h3 class="font-serif font-bold text-amber-400 text-lg mb-2">Editorial & Schematics Inquiries</h3>
+            <p class="text-sm text-stone-400 mb-4">For questions regarding battery sizing calculators, code interpretations (NEC NFPA 70), or article corrections:</p>
+            <a href="mailto:editorial@thesuburbanoutpost.com" class="text-amber-300 font-mono text-sm underline font-semibold">editorial@thesuburbanoutpost.com</a>
+          </div>
+
+          <div class="p-6 rounded-2xl border border-stone-800 bg-stone-900/60">
+            <h3 class="font-serif font-bold text-amber-400 text-lg mb-2">Advertising, Compliance & Legal</h3>
+            <p class="text-sm text-stone-400 mb-4">For advertising verification (ads.txt, AdSense), affiliate inquiries, or copyright matters:</p>
+            <a href="mailto:editorial@thesuburbanoutpost.com" class="text-amber-300 font-mono text-sm underline font-semibold">editorial@thesuburbanoutpost.com</a>
+          </div>
+        </div>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">Operating Location & Jurisdiction</h2>
+        <p>The Suburban Outpost is based in the United States and focuses its engineering analyses on North American residential building codes (IRC, IBC, NEC, UPC). While principles of solar generation and water purification apply globally, electrical voltages (120V/240V split-phase 60Hz) and municipal permitting referenced across this site reflect U.S. and Canadian residential standards.</p>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">Response Time Commitment</h2>
+        <p>Our editorial and engineering review desk aims to respond to all technical inquiries, code corrections, and compliance notices within 1 to 2 business days.</p>
+      </section>
+    `;
+  } else if (cleanPath === '/terms') {
+    pageContent = `
+      <header class="mb-8 border-b border-stone-800 pb-6">
+        <div class="text-xs font-mono text-amber-500 uppercase tracking-wider mb-2">Terms of Service • Safety & Legal Notice</div>
+        <h1 class="font-serif text-3xl sm:text-5xl font-extrabold text-stone-100 mb-4 leading-tight">Terms of Service & Engineering Disclaimers</h1>
+        <p class="text-lg text-stone-300 font-light leading-relaxed">Essential safety warnings, educational limitations, and terms governing your use of The Suburban Outpost.</p>
+      </header>
+
+      <section class="space-y-6 text-stone-300 text-base sm:text-lg leading-relaxed">
+        <div class="p-6 rounded-2xl border border-red-900/60 bg-red-950/20 text-stone-200 mb-6">
+          <h3 class="font-bold text-red-400 text-lg mb-2">CRITICAL HIGH-VOLTAGE & COMBUSTION SAFETY NOTICE</h3>
+          <p class="text-sm leading-relaxed">Working with high-voltage alternating current (120V/240V AC), high-amperage direct current (12V/24V/48V DC battery banks), pressurized plumbing, and wood/solid fuel heating systems carries substantial risk of severe electric shock, arc flash, explosion, structural fire, carbon monoxide poisoning, and death. All content on this site is provided for educational and illustrative purposes only.</p>
+        </div>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">1. Educational & Informational Purpose Only</h2>
+        <p>The Suburban Outpost publishes technical research, blueprints, and calculators to foster residential self-reliance. However, neither The Suburban Outpost nor its authors are licensed structural engineers, electrical contractors, or master plumbers in your municipal jurisdiction. Consult a licensed, insured contractor and your local building department before modifying service panels, gas lines, or load-bearing structures.</p>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">2. Building Codes & Permitting Responsibilities</h2>
+        <p>Zoning ordinances, Homeowner Association (HOA) covenants, and building codes vary significantly across states, counties, and townships. It is the sole legal responsibility of the homeowner or property owner to pull required municipal permits, schedule rough-in and final inspections, and verify that installations comply with the current National Electrical Code (NFPA 70), International Residential Code (IRC), and local environmental regulations.</p>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">3. Limitation of Liability</h2>
+        <p>To the maximum extent permitted by applicable law, The Suburban Outpost, its editors, contributors, and affiliates shall not be liable for any direct, indirect, incidental, consequential, or punitive damages arising from the implementation or misuse of any wiring schematic, plumbing configuration, heating layout, or product recommendation published on this website.</p>
+
+        <h2 class="font-serif text-2xl font-bold text-amber-200 mt-8 mb-3">4. Intellectual Property</h2>
+        <p>All original content, technical blueprints, schematics, articles, and interactive calculators published on The Suburban Outpost are protected under United States and international copyright laws. Reproduction without prior written authorization is strictly prohibited.</p>
+      </section>
+    `;
+  }
+
+  return `
+    <div class="min-h-screen bg-stone-950 text-stone-100 flex flex-col justify-between">
+      <nav class="border-b border-stone-800 bg-stone-900/80 backdrop-blur sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-5xl mx-auto flex items-center justify-between">
+          <a href="/" class="flex items-center space-x-2 text-stone-100 hover:text-amber-400 font-serif font-bold text-xl tracking-tight">
+            <span class="text-amber-500 font-mono">[⬡]</span>
+            <span>The Suburban Outpost</span>
+          </a>
+          <div class="flex items-center space-x-4 text-xs font-mono">
+            <a href="/" class="text-stone-300 hover:text-amber-400">Home</a>
+            <a href="/calculators" class="text-stone-300 hover:text-amber-400">Calculators</a>
+            <a href="/about" class="text-stone-300 hover:text-amber-400">About</a>
+          </div>
+        </div>
+      </nav>
+
+      <main class="max-w-4xl mx-auto px-4 py-8 sm:py-12 flex-grow">
+        ${pageContent}
+      </main>
+
+      <footer class="border-t border-stone-800 bg-stone-900/60 py-8 px-4 mt-16 text-center text-xs text-stone-400">
+        <div class="max-w-5xl mx-auto space-y-4">
+          <div class="flex flex-wrap justify-center gap-4 text-xs font-mono text-stone-300">
+            <a href="/" class="hover:text-amber-400">Home</a>
+            <a href="/about" class="hover:text-amber-400">About Us</a>
+            <a href="/editorial" class="hover:text-amber-400">Editorial Policy</a>
+            <a href="/affiliate" class="hover:text-amber-400">Affiliate Disclosure</a>
+            <a href="/privacy" class="hover:text-amber-400">Privacy Policy</a>
+            <a href="/contact" class="hover:text-amber-400">Contact Us</a>
+            <a href="/terms" class="hover:text-amber-400">Terms & Disclaimers</a>
+          </div>
+          <p class="text-stone-500 max-w-xl mx-auto">The Suburban Outpost provides residential self-reliance blueprints. Compliant with FTC 16 CFR § 255 & Google AdSense Publisher Policies (pub-7519914520551172).</p>
+          <p class="text-stone-600 font-mono">© ${new Date().getFullYear()} The Suburban Outpost. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  `;
+}
+
 /**
  * Injects per-route canonical URL, SEO title, description, OpenGraph, Twitter, Schema.org JSON-LD,
  * AND full semantic HTML body directly into the initial raw HTML document sent to Googlebot and web crawlers.
@@ -4939,10 +5174,28 @@ function renderHtmlWithMeta(rawTemplate: string, reqPath: string): string {
     title = 'Restricted Administration | The Suburban Outpost';
     description = 'Restricted administrative terminal.';
     robotsTag = '\n    <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />';
-  } else if (cleanPath === '/about' || cleanPath === '/editorial' || cleanPath === '/privacy' || cleanPath === '/affiliate') {
+  } else if (cleanPath === '/about' || cleanPath === '/editorial' || cleanPath === '/privacy' || cleanPath === '/affiliate' || cleanPath === '/contact' || cleanPath === '/terms') {
     canonicalUrl = `https://thesuburbanoutpost.com${cleanPath}`;
-    const pageName = cleanPath.slice(1).charAt(0).toUpperCase() + cleanPath.slice(2);
-    title = `${pageName} Standards & Protocols | The Suburban Outpost`;
+    if (cleanPath === '/about') {
+      title = 'About The Suburban Outpost | Engineering Residential Autonomy';
+      description = 'The Suburban Outpost publishes field-tested engineering blueprints, low-noise battery storage guides, and rainwater harvesting designs for suburban lots.';
+    } else if (cleanPath === '/editorial') {
+      title = 'Editorial Policy & Field Testing Standards | The Suburban Outpost';
+      description = 'Our rigorous editorial methodology: hands-on hardware load testing, decibel level verification, zero pay-for-play guarantee, and corrections transparency.';
+    } else if (cleanPath === '/affiliate') {
+      title = 'Affiliate Disclosure & Monetization Transparency | The Suburban Outpost';
+      description = 'Full FTC compliance disclosure regarding our participation in the Amazon Services LLC Associates Program and Google AdSense network.';
+    } else if (cleanPath === '/privacy') {
+      title = 'Privacy Policy & Cookie Disclosures | The Suburban Outpost';
+      description = 'Comprehensive privacy policy, including Google AdSense advertising cookies, DART cookie opt-outs, GDPR, and CCPA consumer rights disclosures.';
+    } else if (cleanPath === '/contact') {
+      title = 'Contact Our Field Engineering & Editorial Team | The Suburban Outpost';
+      description = 'Get in touch with The Suburban Outpost editorial staff for technical inquiries, schematics corrections, and compliance requests.';
+    } else if (cleanPath === '/terms') {
+      title = 'Terms of Service & Engineering Disclaimers | The Suburban Outpost';
+      description = 'Critical safety disclaimers regarding high-voltage electrical circuits, combustible wood heat, plumbing codes, and educational terms of use.';
+    }
+    ssrBodyHtml = renderInstitutionalHtml(cleanPath);
   } else {
     // Default / Homepage
     canonicalUrl = 'https://thesuburbanoutpost.com/';

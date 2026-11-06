@@ -41,7 +41,7 @@ export default function App() {
       ? null 
       : initialRoute.articleSlug
   );
-  const [activeModal, setActiveModal] = useState<'about' | 'editorial' | 'affiliate' | 'privacy' | null>(initialRoute.modal);
+  const [activeModal, setActiveModal] = useState<'about' | 'editorial' | 'affiliate' | 'privacy' | 'contact' | 'terms' | null>(initialRoute.modal);
   const [showAnalyticsModal, setShowAnalyticsModal] = useState<boolean>(false);
   const [showRebateModal, setShowRebateModal] = useState<boolean>(false);
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
@@ -400,7 +400,7 @@ export default function App() {
     trackPageView("The Suburban Outpost - Admin Engine Console", "/admin");
   };
 
-  const navigateToModal = (modal: 'about' | 'editorial' | 'affiliate' | 'privacy' | null) => {
+  const navigateToModal = (modal: 'about' | 'editorial' | 'affiliate' | 'privacy' | 'contact' | 'terms' | null) => {
     if (modal) {
       navigateTo(`/${modal}`);
       trackPageView(`${modal.toUpperCase()} - The Suburban Outpost`, `/${modal}`);
@@ -684,6 +684,22 @@ export default function App() {
             >
               Privacy Policy
             </a>
+            <span>•</span>
+            <a 
+              href="/terms" 
+              onClick={(e) => { e.preventDefault(); navigateToModal('terms'); }} 
+              className="hover:text-amber-400 transition-colors underline"
+            >
+              Terms &amp; Disclaimers
+            </a>
+            <span>•</span>
+            <a 
+              href="/contact" 
+              onClick={(e) => { e.preventDefault(); navigateToModal('contact'); }} 
+              className="hover:text-amber-400 transition-colors underline"
+            >
+              Contact Us
+            </a>
           </div>
           <span className="text-[10px] sm:text-[11px] text-stone-500">
             Publisher: The Suburban Outpost Field Media Group
@@ -780,17 +796,106 @@ export default function App() {
 
             {activeModal === 'privacy' && (
               <div>
-                <span className="text-xs font-mono text-sky-400 uppercase tracking-wider block mb-1">Data Governance</span>
+                <span className="text-xs font-mono text-sky-400 uppercase tracking-wider block mb-1">Data Governance &amp; Advertising Disclosures</span>
                 <h2 className="text-2xl font-serif font-bold text-stone-100 mb-4">Privacy Policy</h2>
-                <div className="space-y-4 text-sm leading-relaxed text-stone-300">
+                <div className="space-y-4 text-xs sm:text-sm leading-relaxed text-stone-300">
                   <p>
-                    The Suburban Outpost respects your personal privacy. We do not sell, rent, or trade your personal information to third parties.
+                    <strong>Effective Date:</strong> January 1, 2026 • <strong>Last Updated:</strong> November 2026
                   </p>
                   <p>
-                    We collect standard anonymous analytics (via Google Analytics 4) to monitor page views, session duration, and click-through performance across our editorial silos to improve technical content quality.
+                    The Suburban Outpost ("we", "our", or "us") is committed to protecting your privacy. This Privacy Policy details how we collect, use, and protect information when you visit <strong>https://thesuburbanoutpost.com</strong>.
+                  </p>
+                  
+                  <h3 className="text-sm font-bold text-amber-300 uppercase tracking-wider pt-2">1. Google AdSense &amp; Third-Party Advertising Cookies</h3>
+                  <p>
+                    We partner with third-party advertising vendors, including Google, to serve advertisements on our website.
+                  </p>
+                  <ul className="list-disc pl-5 space-y-1.5 text-stone-300">
+                    <li>Third-party vendors, including Google, use cookies to serve ads based on a user's prior visits to our website or other websites on the Internet.</li>
+                    <li>Google's use of advertising cookies (such as the DoubleClick cookie) enables it and its partners to serve personalized advertisements to our visitors based on their visit to our site and/or other sites on the web.</li>
+                    <li>Users may opt out of personalized advertising at any time by visiting <a href="https://www.google.com/settings/ads" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline font-semibold">Google Ads Settings</a>.</li>
+                    <li>Alternatively, users can opt out of a third-party vendor's use of cookies for personalized advertising by visiting <a href="https://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-amber-400 underline font-semibold">www.aboutads.info</a>.</li>
+                  </ul>
+
+                  <h3 className="text-sm font-bold text-amber-300 uppercase tracking-wider pt-2">2. Amazon Associates &amp; Affiliate Cookies</h3>
+                  <p>
+                    The Suburban Outpost participates in the Amazon Services LLC Associates Program. When you click outbound product links directed to Amazon.com, Amazon places tracking cookies to verify referrals and allocate qualifying sales commissions. These cookies do not store personally identifiable information.
+                  </p>
+
+                  <h3 className="text-sm font-bold text-amber-300 uppercase tracking-wider pt-2">3. Analytics &amp; Performance Metrics</h3>
+                  <p>
+                    We utilize Google Analytics 4 (GA4) with IP anonymization enabled to monitor aggregate readership trends, page load metrics, and technical calculator usage. This diagnostic data helps us improve server response times and editorial accuracy.
+                  </p>
+
+                  <h3 className="text-sm font-bold text-amber-300 uppercase tracking-wider pt-2">4. Your Privacy Rights (CCPA / CPRA &amp; GDPR)</h3>
+                  <p>
+                    Depending on your jurisdiction, you have the right to request access to or deletion of personal data we retain (such as newsletter emails), or opt out of automated profiling. We do not sell or rent personal information to data brokers.
                   </p>
                   <p>
-                    Outbound affiliate links to Amazon.com may utilize cookies placed by Amazon to track referral commissions in accordance with Amazon’s standard privacy policy.
+                    For inquiries regarding our privacy standards or data deletion requests, contact our Data Privacy Officer at <strong className="text-stone-200">privacy@thesuburbanoutpost.com</strong>.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {activeModal === 'contact' && (
+              <div>
+                <span className="text-xs font-mono text-amber-500 uppercase tracking-wider block mb-1">Communications &amp; Editorial Desk</span>
+                <h2 className="text-2xl font-serif font-bold text-stone-100 mb-4">Contact The Suburban Outpost</h2>
+                <div className="space-y-4 text-xs sm:text-sm leading-relaxed text-stone-300">
+                  <p>
+                    Whether you have feedback on a field schematic, want to report an updated municipal code statute, or wish to submit hardware for independent decibel and thermal testing, our editorial engineering team is accessible through the channels below:
+                  </p>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                    <div className="p-4 rounded-xl bg-stone-950 border border-stone-800">
+                      <div className="text-amber-400 font-mono text-xs font-bold uppercase mb-1">General Inquiries &amp; Corrections</div>
+                      <div className="text-stone-200 text-sm font-semibold">editorial@thesuburbanoutpost.com</div>
+                      <div className="text-[11px] text-stone-400 mt-1">Average response time: 24–48 business hours</div>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-stone-950 border border-stone-800">
+                      <div className="text-amber-400 font-mono text-xs font-bold uppercase mb-1">Hardware Testing Submissions</div>
+                      <div className="text-stone-200 text-sm font-semibold">testing@thesuburbanoutpost.com</div>
+                      <div className="text-[11px] text-stone-400 mt-1">Acoustic, electrical load, &amp; thermal bench units</div>
+                    </div>
+                  </div>
+
+                  <h3 className="text-sm font-bold text-stone-200 uppercase tracking-wider pt-2">Editorial Integrity &amp; Correction Policy</h3>
+                  <p>
+                    If you detect an inaccuracy in a wiring diagram, plumbing friction-loss chart, or zoning code citation, please email us with the subject line <em>"Correction Request: [Article Title]"</em>. We verify all technical corrections against current NEC, IPMC, and EPA codes and publish change notes promptly.
+                  </p>
+
+                  <div className="p-3.5 rounded-xl bg-stone-950 border border-stone-800 text-[11px] font-mono text-stone-400">
+                    <strong>Publication Desk:</strong> The Suburban Outpost Field Media Group<br />
+                    <strong>Digital Presence:</strong> https://thesuburbanoutpost.com
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {activeModal === 'terms' && (
+              <div>
+                <span className="text-xs font-mono text-rose-400 uppercase tracking-wider block mb-1">Legal Disclosures &amp; Engineering Safety</span>
+                <h2 className="text-2xl font-serif font-bold text-stone-100 mb-4">Terms of Service &amp; Safety Disclaimer</h2>
+                <div className="space-y-4 text-xs sm:text-sm leading-relaxed text-stone-300">
+                  <div className="p-3.5 rounded-xl bg-rose-950/40 border border-rose-800/60 text-rose-200 text-xs font-mono">
+                    <strong>CRITICAL SAFETY NOTICE:</strong> High-voltage AC/DC electrical systems, pressurized water storage, and wood combustion appliances carry inherent risks of severe injury, electrocution, fire, and structural damage.
+                  </div>
+
+                  <h3 className="text-sm font-bold text-stone-200 uppercase tracking-wider pt-2">1. Educational &amp; Informational Reference Only</h3>
+                  <p>
+                    All content, schematics, load calculators, and technical diagrams published on The Suburban Outpost are provided strictly for educational, informational, and reference purposes. They do not constitute certified professional architectural, structural, or electrical engineering advice.
+                  </p>
+
+                  <h3 className="text-sm font-bold text-stone-200 uppercase tracking-wider pt-2">2. Building Codes &amp; Licensed Professionals</h3>
+                  <p>
+                    Local building codes (such as the International Residential Code, National Electrical Code NFPA 70, and local HOA bylaws) vary significantly by municipal jurisdiction. Readers must always verify local permitting requirements and consult with certified, licensed professionals (e.g., licensed electricians, master plumbers, or professional structural engineers) prior to installing transfer switches, cutting penetrations into building foundations, or modifying dwelling circuits.
+                  </p>
+
+                  <h3 className="text-sm font-bold text-stone-200 uppercase tracking-wider pt-2">3. Limitation of Liability</h3>
+                  <p>
+                    Under no circumstances shall The Suburban Outpost, its authors, editors, or contributors be held liable for any direct, indirect, incidental, consequential, or punitive damages resulting from the use or misuse of any information, specifications, or product recommendations published on this website.
                   </p>
                 </div>
               </div>
